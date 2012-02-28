@@ -16,11 +16,10 @@ public final class R {
         public static final int staron=0x7f020002;
     }
     public static final class id {
-        public static final int button1=0x7f050005;
-        public static final int button2=0x7f050006;
-        public static final int imageView1=0x7f050003;
-        public static final int imageView2=0x7f050002;
-        public static final int linearLayout1=0x7f050004;
+        public static final int button1=0x7f050004;
+        public static final int button2=0x7f050005;
+        public static final int imageView1=0x7f050002;
+        public static final int linearLayout1=0x7f050003;
         public static final int linearLayout2=0x7f050000;
         public static final int linearLayout3=0x7f050001;
     }

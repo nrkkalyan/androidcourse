@@ -26,16 +26,11 @@ public class HelloAndroid extends Activity implements View.OnClickListener {
 	public void onClick(View view) {
 		CharSequence text = "Hello toast!";
 		ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
-		ImageView imageView2 = (ImageView) findViewById(R.id.imageView2);
 		if (view.getId() == R.id.button1) {
-			imageView1.setVisibility(View.VISIBLE);
 			imageView1.setBackgroundResource(R.drawable.staron);
-			imageView2.setVisibility(View.GONE);
 			text = "Shining Star!";
 		} else if (view.getId() == R.id.button2) {
-			imageView1.setVisibility(View.GONE);
-			imageView2.setVisibility(View.VISIBLE);
-			imageView2.setBackgroundResource(R.drawable.staroff);
+			imageView1.setBackgroundResource(R.drawable.staroff);
 			text = "Black Star!";
 		}
 

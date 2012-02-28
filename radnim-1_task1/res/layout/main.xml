@@ -16,17 +16,12 @@
             android:orientation="vertical" >
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/staroff" />
 
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/staron" />
+			android:contentDescription="@+id/imageView1" />
 
     </LinearLayout>
 
