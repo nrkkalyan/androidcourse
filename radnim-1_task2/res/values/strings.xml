@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, ImageTagerActivity!</string>
+    <string name="app_name">ImageTager</string>
+    <string name="listofimages">List of images</string>
+    <string name="desc">Image in Fullscreen</string>
+    <string name="tag">Tag</string>
+    <string name="tagedcontact">Tagged in this image</string>
+
+</resources>
