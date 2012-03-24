@@ -3,7 +3,5 @@
 
     <string name="hello">Hello World, Main!</string>
     <string name="app_name">Image Tagger</string>
-    <string name="tag">Tag</string>
-    <string name="taggedimage">TaggedImage</string>
-	<string name="galary">Galary</string>
+	
 </resources>

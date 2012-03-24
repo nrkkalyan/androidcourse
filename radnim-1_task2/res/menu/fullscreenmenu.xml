@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/tag" android:title="@string/tag"></item>
-    <item android:id="@+id/tagedcontact" android:title="@string/tagedcontact"></item>
-    
 
+    <item android:id="@+id/tag"
+        android:title="@string/tag" />
+
+    <item android:id="@+id/taggedimage"
+        android:title="@string/taggedimage" />
+    
 </menu>

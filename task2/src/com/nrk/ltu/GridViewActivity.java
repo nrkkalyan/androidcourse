@@ -30,7 +30,7 @@ public class GridViewActivity extends Activity {
 
 		setContentView(R.layout.gridview);
 
-		GridView gridView = (GridView) findViewById(R.id.myGrid);
+		GridView gridView = (GridView) findViewById(R.id.gridView1);
 		String[] projection = { MediaStore.Images.Media._ID };
 		// Create the cursor pointing to the SDCard
 		cursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Images.Media.DATA + " like ? ",
@@ -44,11 +44,9 @@ public class GridViewActivity extends Activity {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				// Uri uri =
-				// Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-				// Integer.toString(position + 1));
+				Uri uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(position + 1));
 				Intent intent = new Intent(GridViewActivity.this, FullScreenActivity.class);
-				intent.putExtra(IMAGE_KEY, position + 1);
+				intent.putExtra(IMAGE_KEY, uri.toString());
 				startActivity(intent);
 			}
 		});
