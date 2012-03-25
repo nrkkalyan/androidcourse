@@ -79,18 +79,6 @@ public class FullScreenActivity extends Activity {
 		}
 		case R.id.taggedimage: {
 			try {
-				// FileInputStream fIn = openFileInput("textfile.txt");
-				// InputStreamReader is = new InputStreamReader(fIn);
-				// BufferedReader br = new BufferedReader(is);
-				// String str = br.readLine();
-				// // while ((str = br.readLine()) != null) {
-				// // Toast.makeText(getBaseContext(), str,
-				// // Toast.LENGTH_SHORT).show();
-				// // }
-				// is.close();
-				// br.close();
-				//
-				// String[] split = str.split("=");
 				db = new DBAdapter(this);
 				db.open();
 				Cursor c = db.getContact(originalImageUrl);
@@ -129,14 +117,6 @@ public class FullScreenActivity extends Activity {
 						Integer.valueOf(contactId.substring(contactId.lastIndexOf("/") + 1, contactId.length())));
 				Toast.makeText(this, name + " tagged successfully!", Toast.LENGTH_SHORT).show();
 
-				// Saving in File
-				// FileOutputStream fOut = openFileOutput("textfile.txt",
-				// Context.MODE_PRIVATE);
-				// OutputStreamWriter osw = new OutputStreamWriter(fOut);
-				// String str = originalImageUrl + "=" + data.getDataString();
-				// osw.write(str);
-				// osw.flush();
-				// osw.close();
 			} catch (Exception e) {
 				Log.e("", "", e);
 			}
