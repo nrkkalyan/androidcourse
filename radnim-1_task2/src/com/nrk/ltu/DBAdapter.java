@@ -12,7 +12,7 @@ public class DBAdapter {
 	public static final String KEY_IMAGE_URL = "image_url";
 	public static final String KEY_CONTACT_URL = "contact_url";
 
-	private static final String DATABASE_NAME = "MyDB";
+	private static final String DATABASE_NAME = "MyDB1";
 	private static final String DATABASE_TABLE = "contacts";
 	private static final int DATABASE_VERSION = 2;
 
@@ -81,7 +81,7 @@ public class DBAdapter {
 	}
 
 	// ---retrieves a particular contact---
-	public Cursor getContact(String imageUrl) throws SQLException {
+	public Cursor getContacts(String imageUrl) throws SQLException {
 		Cursor mCursor = db.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_IMAGE_URL, KEY_CONTACT_URL }, KEY_IMAGE_URL + "='" + imageUrl + "'",
 				null, null, null, null, null);
 		if (mCursor != null) {
