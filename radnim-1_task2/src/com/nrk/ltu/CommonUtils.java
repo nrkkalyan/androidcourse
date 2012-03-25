@@ -37,4 +37,9 @@ public class CommonUtils {
 		return contactName;
 	}
 
+	public static String getContactName(Context baseContext, String contactUrl) {
+		int contactId = Integer.valueOf(contactUrl.substring(contactUrl.lastIndexOf("/") + 1, contactUrl.length()));
+		return getContactName(baseContext, contactId);
+	}
+
 }

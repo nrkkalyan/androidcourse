@@ -63,6 +63,7 @@ public class DBAdapter {
 
 	// ---insert a contact into the database---
 	public long insertContact(String imageUrl, String contactUrl) {
+
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_IMAGE_URL, imageUrl);
 		initialValues.put(KEY_CONTACT_URL, contactUrl);

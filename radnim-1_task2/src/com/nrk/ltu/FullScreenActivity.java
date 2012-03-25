@@ -82,7 +82,7 @@ public class FullScreenActivity extends Activity {
 				db = new DBAdapter(this);
 				db.open();
 				Cursor c = db.getContact(originalImageUrl);
-				if (c != null) {
+				if (c != null && c.getCount() > 1) {
 					String imageUrl = c.getString(1);
 					String contactUrl = c.getString(2);
 					Toast.makeText(this, "id: " + c.getString(0) + "\n" + "ImageUrl: " + imageUrl + "\n" + "ContactName:  " + contactUrl,
@@ -90,7 +90,7 @@ public class FullScreenActivity extends Activity {
 					Intent i = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(contactUrl));
 					startActivity(i);
 				} else {
-					Toast.makeText(this, "No contact found", Toast.LENGTH_LONG).show();
+					Toast.makeText(this, "No contacts are tagged!", Toast.LENGTH_LONG).show();
 				}
 				db.close();
 
@@ -108,19 +108,22 @@ public class FullScreenActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			String contactId = data.getDataString();
+			String name = CommonUtils.getContactName(FullScreenActivity.this,
+					Integer.valueOf(contactId.substring(contactId.lastIndexOf("/") + 1, contactId.length())));
 			try {
 				db = new DBAdapter(this);
 				db.open();
-				db.insertContact(originalImageUrl, data.getDataString());
-				db.close();
-				String name = CommonUtils.getContactName(FullScreenActivity.this,
-						Integer.valueOf(contactId.substring(contactId.lastIndexOf("/") + 1, contactId.length())));
-				Toast.makeText(this, name + " tagged successfully!", Toast.LENGTH_SHORT).show();
-
+				long insertContact = db.insertContact(originalImageUrl, data.getDataString());
+				if (insertContact == -1) {
+					Toast.makeText(this, "Contact is already tagged!", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(this, name += " tagged successfully!", Toast.LENGTH_SHORT).show();
+				}
 			} catch (Exception e) {
 				Log.e("", "", e);
+			} finally {
+				db.close();
 			}
 		}
 	}
-
 }
