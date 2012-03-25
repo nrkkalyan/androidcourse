@@ -1,15 +1,19 @@
 package com.nrk.ltu;
 
+import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,7 +22,8 @@ import android.widget.Toast;
 
 public class FullScreenActivity extends Activity {
 
-	private Integer originalImageId = null;
+	private String originalImageUrl = null;
+	private DBAdapter db;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -27,11 +32,32 @@ public class FullScreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fullscreenview);
 		Intent intent = getIntent();
-		originalImageId = intent.getExtras().getInt(GridViewActivity.IMAGE_KEY);
-		Bitmap b = MediaStore.Images.Thumbnails.getThumbnail(getContentResolver(), originalImageId, MediaStore.Images.Thumbnails.MINI_KIND, null);
+		originalImageUrl = intent.getExtras().getString(GridViewActivity.IMAGE_KEY);
 		ImageView iv = (ImageView) findViewById(R.id.fullscreenImageView);
+		Bitmap b = CommonUtils.getBitmap(getContentResolver(), originalImageUrl);
 		iv.setImageBitmap(b);
 
+		try {
+			String destPath = "/data/data/" + getPackageName() + "/databases/MyDB";
+			File f = new File(destPath);
+			if (!f.exists()) {
+				CopyDB(getBaseContext().getAssets().open("mydb"), new FileOutputStream(destPath));
+			}
+		} catch (Exception e) {
+			Log.e("", "", e);
+		}
+
+	}
+
+	public void CopyDB(InputStream inputStream, OutputStream outputStream) throws IOException {
+		// ---copy 1K bytes at a time---
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = inputStream.read(buffer)) > 0) {
+			outputStream.write(buffer, 0, length);
+		}
+		inputStream.close();
+		outputStream.close();
 	}
 
 	@Override
@@ -52,7 +78,37 @@ public class FullScreenActivity extends Activity {
 			return true;
 		}
 		case R.id.taggedimage: {
-			Toast.makeText(this, "Taggedimage!", Toast.LENGTH_SHORT).show();
+			try {
+				// FileInputStream fIn = openFileInput("textfile.txt");
+				// InputStreamReader is = new InputStreamReader(fIn);
+				// BufferedReader br = new BufferedReader(is);
+				// String str = br.readLine();
+				// // while ((str = br.readLine()) != null) {
+				// // Toast.makeText(getBaseContext(), str,
+				// // Toast.LENGTH_SHORT).show();
+				// // }
+				// is.close();
+				// br.close();
+				//
+				// String[] split = str.split("=");
+				db = new DBAdapter(this);
+				db.open();
+				Cursor c = db.getContact(originalImageUrl);
+				if (c != null) {
+					String imageUrl = c.getString(1);
+					String contactUrl = c.getString(2);
+					Toast.makeText(this, "id: " + c.getString(0) + "\n" + "ImageUrl: " + imageUrl + "\n" + "ContactName:  " + contactUrl,
+							Toast.LENGTH_LONG).show();
+					Intent i = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(contactUrl));
+					startActivity(i);
+				} else {
+					Toast.makeText(this, "No contact found", Toast.LENGTH_LONG).show();
+				}
+				db.close();
+
+			} catch (Exception e) {
+				Log.e("", "", e);
+			}
 			return true;
 		}
 		default:
@@ -65,15 +121,24 @@ public class FullScreenActivity extends Activity {
 		if (resultCode == RESULT_OK) {
 			String contactId = data.getDataString();
 			try {
-				FileOutputStream fOut = openFileOutput("textfile.txt", Context.MODE_PRIVATE);
-				OutputStreamWriter osw = new OutputStreamWriter(fOut);
-				String str = originalImageId + "=" + contactId;
-				osw.write(str);
-				osw.flush();
-				osw.close();
-				Toast.makeText(this, "Tagged successfully!", Toast.LENGTH_SHORT).show();
+				db = new DBAdapter(this);
+				db.open();
+				db.insertContact(originalImageUrl, data.getDataString());
+				db.close();
+				String name = CommonUtils.getContactName(FullScreenActivity.this,
+						Integer.valueOf(contactId.substring(contactId.lastIndexOf("/") + 1, contactId.length())));
+				Toast.makeText(this, name + " tagged successfully!", Toast.LENGTH_SHORT).show();
+
+				// Saving in File
+				// FileOutputStream fOut = openFileOutput("textfile.txt",
+				// Context.MODE_PRIVATE);
+				// OutputStreamWriter osw = new OutputStreamWriter(fOut);
+				// String str = originalImageUrl + "=" + data.getDataString();
+				// osw.write(str);
+				// osw.flush();
+				// osw.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e("", "", e);
 			}
 		}
 	}

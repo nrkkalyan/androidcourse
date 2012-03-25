@@ -3,7 +3,7 @@
     package="com.nrk.ltu"
     android:versionCode="1"
     android:versionName="1.0" >
-
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-sdk android:minSdkVersion="10" />
 
     <application

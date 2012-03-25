@@ -44,11 +44,9 @@ public class GridViewActivity extends Activity {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				// Uri uri =
-				// Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-				// Integer.toString(position + 1));
+				Uri uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(position + 1));
 				Intent intent = new Intent(GridViewActivity.this, FullScreenActivity.class);
-				intent.putExtra(IMAGE_KEY, position + 1);
+				intent.putExtra(IMAGE_KEY, uri.toString());
 				startActivity(intent);
 			}
 		});
@@ -91,8 +89,7 @@ public class GridViewActivity extends Activity {
 			int imageID = cursor.getInt(columnIndex);
 			Uri uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + imageID);
 			String url = uri.toString();
-			int originalImageId = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1, url.length()));
-			Bitmap b = MediaStore.Images.Thumbnails.getThumbnail(getContentResolver(), originalImageId, MediaStore.Images.Thumbnails.MINI_KIND, null);
+			Bitmap b = CommonUtils.getBitmap(getContentResolver(), url);
 			imageView.setImageBitmap(b);
 			return imageView;
 		}
