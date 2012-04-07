@@ -31,14 +31,12 @@ public class Main extends ListActivity {
 				} while (c.moveToNext());
 			}
 			db.close();
-			// setListAdapter(new MyArrayAdapter(this,
-			// android.R.layout.simple_gallery_item, R.id.textView1,
-			// tagedImageList));
 			setListAdapter(new MyArrayAdapter(this, android.R.layout.simple_gallery_item, R.id.textView1, tagedImageList));
 		} else {
 			Toast.makeText(this, "No images are tagged!", Toast.LENGTH_LONG).show();
 			Intent intent = new Intent(this, GridViewActivity.class);
 			startActivity(intent);
+			finish();
 		}
 
 	}
@@ -62,44 +60,5 @@ public class Main extends ListActivity {
 			return false;
 		}
 	}
-
-	// private class MyArrayAdapter extends ArrayAdapter<TagedImage> {
-	//
-	// public MyArrayAdapter(Context context, int resource, int
-	// textViewResourceId, List<TagedImage> objects) {
-	// super(context, resource, textViewResourceId, objects);
-	// }
-	//
-	// @Override
-	// public View getView(int position, View convertView, ViewGroup parent) {
-	//
-	// LayoutInflater inflater = (LayoutInflater)
-	// getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	// View row = inflater.inflate(R.layout.list_view, parent, false);
-	//
-	// ImageView iv = (ImageView) row.findViewById(R.id.imageView1);
-	// TextView tv = (TextView) row.findViewById(R.id.textView1);
-	//
-	// Bitmap b = CommonUtils.getBitmap(getContentResolver(),
-	// tagedImageList.get(position).imageUrl);
-	// iv.setImageBitmap(b);
-	// tv.setText(CommonUtils.getContactName(row.getContext(),
-	// tagedImageList.get(position).contactUrl));
-	// return row;
-	// }
-	//
-	// }
-	//
-	// private static class TagedImage implements Serializable {
-	// private static final long serialVersionUID = 1L;
-	// private final String imageUrl;
-	// private final String contactUrl;
-	//
-	// public TagedImage(String imageUrl, String contactUrl) {
-	// this.imageUrl = imageUrl;
-	// this.contactUrl = contactUrl;
-	// }
-	//
-	// }
 
 }

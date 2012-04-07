@@ -76,33 +76,10 @@ public class FullScreenActivity extends Activity {
 			return true;
 		}
 		case R.id.taggedimage: {
-			// try {
-			// db = new DBAdapter(this);
-			// db.open();
-			// Cursor c = db.getContacts(originalImageUrl);
-			// if (c != null && c.getCount() > 1) {
-			// String imageUrl = c.getString(1);
-			// String contactUrl = c.getString(2);
-			// Toast.makeText(this, "id: " + c.getString(0) + "\n" +
-			// "ImageUrl: " + imageUrl + "\n" + "ContactName:  " +
-			// contactUrl,
-			// Toast.LENGTH_LONG).show();
-			// Intent i = new Intent(android.content.Intent.ACTION_VIEW,
-			// Uri.parse(contactUrl));
-			// startActivity(i);
 			Intent intent = new Intent(this, ContactsActivity.class);
 			intent.putExtra(GridViewActivity.IMAGE_KEY, originalImageUrl);
 			startActivity(intent);
-
-			// } else {
-			// Toast.makeText(this, "No contacts are tagged!",
-			// Toast.LENGTH_LONG).show();
-			// }
-			// db.close();
-
-			// } catch (Exception e) {
-			// Log.e("", "", e);
-			// }
+			finish();
 			return true;
 		}
 		default:

@@ -34,6 +34,7 @@ public class ContactsActivity extends ListActivity {
 			Toast.makeText(this, "No contacts are taged to this image!", Toast.LENGTH_LONG).show();
 			intent = new Intent(this, GridViewActivity.class);
 			startActivity(intent);
+			finish();
 		}
 
 	}

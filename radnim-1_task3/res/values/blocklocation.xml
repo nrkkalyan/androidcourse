@@ -1,0 +1,20 @@
+<resources>
+
+    <integer name="blocknumber">5</integer>
+
+    <integer-array name="x">
+        <item>50</item>
+        <item>80</item>
+        <item>110</item>
+        <item>140</item>
+        <item>170</item>
+    </integer-array>
+    <integer-array name="y">
+        <item>50</item>
+        <item>50</item>
+        <item>50</item>
+        <item>50</item>
+        <item>50</item>
+    </integer-array>
+
+</resources>

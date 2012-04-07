@@ -12,7 +12,7 @@ public class DBAdapter {
 	public static final String KEY_IMAGE_URL = "image_url";
 	public static final String KEY_CONTACT_URL = "contact_url";
 
-	private static final String DATABASE_NAME = "MyDB1";
+	private static final String DATABASE_NAME = "MyDB2";
 	private static final String DATABASE_TABLE = "contacts";
 	private static final int DATABASE_VERSION = 2;
 
