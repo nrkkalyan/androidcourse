@@ -2,7 +2,6 @@ package com.nrk.ltu;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,7 +14,7 @@ import android.view.SurfaceView;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private SpriteObject paddle;
-	private SpriteObject[] block;
+	private SpriteObject[] brickBlocks;
 	private SpriteObject ball;
 
 	private GameLogic mGameLogic;
@@ -28,17 +27,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private int[] y_coords;
 	private int block_count;
 
-	private Activity context;
+	private GameViewActivity gameViewActivity;
 
 	private MediaPlayer mp;
 
-	public GameView(Activity con) {
-		super(con);
-		context = con;
+	public GameView(GameViewActivity activity) {
+		super(activity);
+		gameViewActivity = activity;
 		getHolder().addCallback(this);
-		paddle = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.paddle), 40, 390);
+		paddle = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.paddle), 40, 350);
 
-		ball = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.ball), 100, 50);
+		ball = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.ball), 0, 80);
 		mGameLogic = new GameLogic(getHolder(), this);
 		createInputObjectPool();
 
@@ -46,12 +45,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		block_count = res.getInteger(R.integer.blocknumber);
 		x_coords = res.getIntArray(R.array.x);
 		y_coords = res.getIntArray(R.array.y);
-		block = new SpriteObject[block_count];
+		brickBlocks = new SpriteObject[block_count];
 		for (int i = 0; i < block_count; i++) {
-			block[i] = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.block), x_coords[i], y_coords[i]);
+			brickBlocks[i] = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.block), x_coords[i], y_coords[i]);
 		}
 
-		mp = MediaPlayer.create(context, R.raw.bounce);
+		mp = MediaPlayer.create(gameViewActivity, R.raw.bounce);
 
 		setFocusable(true);
 		setSoundEffectsEnabled(true);
@@ -95,9 +94,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	public void surfaceCreated(SurfaceHolder holder) {
 		mGameLogic.setGameState(GameLogic.RUNNING);
 		mGameLogic.start();
-		mp.start();
-		ball.setMoveY(-10);
-		ball.setMoveX(10);
+
+		ball.setMoveY(5);
+		ball.setMoveX(5);
 
 	}
 
@@ -114,8 +113,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.drawColor(Color.WHITE);
 		ball.draw(canvas);
 		paddle.draw(canvas);
-		for (int i = 0; i < block_count; i++) {
-			block[i].draw(canvas);
+		for (SpriteObject brick : brickBlocks) {
+			brick.draw(canvas);
 		}
 		game_width = canvas.getWidth();
 		game_height = canvas.getHeight();
@@ -128,11 +127,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		int ball_y = (int) ball.getY();
 		int ball_x = (int) ball.getX();
 
+		// paddle collision
+		if (paddle.collide(ball)) {
+			mp.start();
+			if (ball_bottom > paddle.getY() && ball_bottom < paddle.getY() + 20) {
+				ball.setMoveY(-ball.getMoveY());
+			}
+		}
+
 		// Bottom Collision
 		if (ball_bottom > game_height) {
 			ball.setMoveY(-ball.getMoveY());
 			// player loses
-			mGameLogic.setGameState(GameLogic.STOP);
+			mGameLogic.setGameState(GameLogic.LOST);
 			return;
 		}
 
@@ -151,44 +158,52 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			ball.setMoveX(-ball.getMoveX());
 		}
 
-		// paddle collision
-		if (paddle.collide(ball)) {
-			if (ball_bottom > paddle.getY() && ball_bottom < paddle.getY() + 20) {
-				ball.setMoveY(-ball.getMoveY());
-			}
-		}
-
 		// check for brick collisions
-		for (int i = 0; i < block_count; i++) {
-			if (ball.collide(block[i])) {
-				block[i].setState(block[i].DEAD);
+		for (SpriteObject brick : brickBlocks) {
+			if (ball.collide(brick)) {
+				brick.setState(SpriteObject.DEAD);
 				mp.start();
-				int block_bottom = (int) (block[i].getY() + block[i].getBitmap().getHeight());
-				int block_right = (int) (block[i].getX() + block[i].getBitmap().getWidth());
+				int block_bottom = (int) (brick.getY() + brick.getBitmap().getHeight());
+				int block_right = (int) (brick.getX() + brick.getBitmap().getWidth());
 
 				// hits bottom of block
-				if (ball_y > block_bottom - 10) {
+				if (ball_y > block_bottom - 5) {
 					ball.setMoveY(ball.getMoveY());
 				}
 				// hits top of block
-				else if (ball_bottom < block[i].getY() + 10) {
+				else if (ball_bottom < brick.getY() + 5) {
 					ball.setMoveY(-ball.getMoveY());
 				}
 				// hits from right
-				else if (ball_x > block_right - 10) {
+				else if (ball_x > block_right - 5) {
 					ball.setMoveX(ball.getMoveX());
 				}
 				// hits from left
-				else if (ball_right < block[i].getX() + 10) {
+				else if (ball_right < brick.getX() + 5) {
 					ball.setMoveX(-ball.getMoveX());
 				}
-
 			}
 		}
 
+		boolean allBricksAreNotDead = false;
+		for (SpriteObject brick : brickBlocks) {
+			if (brick.getState() != SpriteObject.DEAD) {
+				allBricksAreNotDead = true;
+				break;
+			}
+		}
+		if (!allBricksAreNotDead) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+			mGameLogic.setGameState(GameLogic.WIN);
+			return;
+		}
+
 		// perform specific updates
-		for (int i = 0; i < block_count; i++) {
-			block[i].update(adj_mov);
+		for (SpriteObject brick : brickBlocks) {
+			brick.update(adj_mov);
 		}
 		paddle.update(adj_mov);
 		ball.update(adj_mov);
@@ -197,8 +212,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void processMotionEvent(InputObject input) {
 		paddle.setX(input.x);
-		// paddle.setY(input.y);
-
 	}
 
 	public void processKeyEvent(InputObject input) {
@@ -216,7 +229,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 
-	public void finish() {
-		this.context.finish();
+	public void finish(String status) {
+		gameViewActivity.finish(status);
 	}
 }

@@ -52,9 +52,9 @@ public class GameViewActivity extends Activity implements SensorEventListener {
 		mGameView.processOrientationEvent(orientation);
 	}
 
-	@Override
-	public void finish() {
-		Intent intent = new Intent(this, LooseGameActivity.class);
+	public void finish(String status) {
+		Intent intent = new Intent(this, GameStatusActivity.class);
+		intent.putExtra(GameStatusActivity.STATUS, status);
 		startActivity(intent);
 		super.finish();
 	}

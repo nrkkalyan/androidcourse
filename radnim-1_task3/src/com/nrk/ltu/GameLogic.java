@@ -10,8 +10,8 @@ public class GameLogic extends Thread {
 	private SurfaceHolder surfaceHolder;
 	private GameView mGameView;
 	private int game_state;
-	public static final int STOP = 0;
-	public static final int READY = 1;
+	public static final int LOST = 0;
+	public static final int WIN = 1;
 	public static final int RUNNING = 2;
 	private ArrayBlockingQueue<InputObject> inputQueue = new ArrayBlockingQueue<InputObject>(20);
 	private Object inputQueueMutex = new Object();
@@ -62,8 +62,12 @@ public class GameLogic extends Thread {
 			}
 		}
 
-		if (game_state == STOP) {
-			mGameView.finish();
+		if (game_state == LOST) {
+			mGameView.finish("Oh no you lost :-( ");
+		}
+
+		if (game_state == WIN) {
+			mGameView.finish("Congratulations you win :-)");
 		}
 	}
 
