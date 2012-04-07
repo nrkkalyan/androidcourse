@@ -26,10 +26,6 @@ public class GameLogic extends Thread {
 		this.game_state = gamestate;
 	}
 
-	public int getGameState() {
-		return game_state;
-	}
-
 	@Override
 	public void run() {
 		long time_orig = System.currentTimeMillis();
@@ -86,9 +82,7 @@ public class GameLogic extends Thread {
 			while (!inputQueue.isEmpty()) {
 				try {
 					InputObject input = inputQueue.take();
-					if (input.eventType == InputObject.EVENT_TYPE_KEY) {
-						mGameView.processKeyEvent(input);
-					} else if (input.eventType == InputObject.EVENT_TYPE_TOUCH) {
+					if (input.eventType == InputObject.EVENT_TYPE_TOUCH) {
 						mGameView.processMotionEvent(input);
 					}
 					input.returnToPool();

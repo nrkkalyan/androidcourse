@@ -3,7 +3,7 @@ package com.nrk.ltu;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-public class SpriteObject {
+public class GameObject {
 
 	private Bitmap bitmap;
 	private double x;
@@ -15,7 +15,7 @@ public class SpriteObject {
 	public static final int ALIVE = 1;
 	private int state;
 
-	public SpriteObject(Bitmap bitmap, int x, int y) {
+	public GameObject(Bitmap bitmap, int x, int y) {
 		this.bitmap = bitmap;
 		this.x = x;
 		this.y = y;
@@ -82,11 +82,10 @@ public class SpriteObject {
 			y += y_move;
 		} else {
 			bitmap.recycle();
-
 		}
 	}
 
-	public boolean collide(SpriteObject entity) {
+	public boolean collide(GameObject entity) {
 		if (state == ALIVE && entity.state == ALIVE) {
 			double left, entity_left;
 			double right, entity_right;

@@ -5,16 +5,15 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/gamestatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="You lost!"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/tryagain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Try Again" />
+        android:text="@string/try_again" />
 
 </LinearLayout>

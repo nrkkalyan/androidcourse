@@ -2,7 +2,6 @@ package com.nrk.ltu;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,41 +12,36 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
-	private SpriteObject paddle;
-	private SpriteObject[] brickBlocks;
-	private SpriteObject ball;
+	private GameObject paddle;
+	private GameObject[] brickBlocks;
+	private GameObject ball;
 
 	private GameLogic mGameLogic;
 	private ArrayBlockingQueue<InputObject> inputObjectPool;
 	private int game_width;
 	private int game_height;
 
-	private Resources res;
-	private int[] x_coords;
-	private int[] y_coords;
-	private int block_count;
-
-	private GameViewActivity gameViewActivity;
+	private MainActivity gameViewActivity;
 
 	private MediaPlayer mp;
 
-	public GameView(GameViewActivity activity) {
-		super(activity);
-		gameViewActivity = activity;
+	public GameView(MainActivity mainActivity) {
+		super(mainActivity);
+		gameViewActivity = mainActivity;
 		getHolder().addCallback(this);
-		paddle = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.paddle), 40, 350);
+		paddle = new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.paddle), 40, 360);
 
-		ball = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.ball), 0, 80);
+		ball = new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.ball), 0, 80);
 		mGameLogic = new GameLogic(getHolder(), this);
 		createInputObjectPool();
 
-		res = getResources();
-		block_count = res.getInteger(R.integer.blocknumber);
-		x_coords = res.getIntArray(R.array.x);
-		y_coords = res.getIntArray(R.array.y);
-		brickBlocks = new SpriteObject[block_count];
-		for (int i = 0; i < block_count; i++) {
-			brickBlocks[i] = new SpriteObject(BitmapFactory.decodeResource(getResources(), R.drawable.block), x_coords[i], y_coords[i]);
+		int totalNumberOfBricks = 7;
+		int x_coord = 0;
+		int y_coord = 50;
+		brickBlocks = new GameObject[totalNumberOfBricks];
+		for (int i = 0; i < totalNumberOfBricks; i++) {
+			x_coord += 30;
+			brickBlocks[i] = new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.block), x_coord, y_coord);
 		}
 
 		mp = MediaPlayer.create(gameViewActivity, R.raw.bounce);
@@ -113,7 +107,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.drawColor(Color.WHITE);
 		ball.draw(canvas);
 		paddle.draw(canvas);
-		for (SpriteObject brick : brickBlocks) {
+		for (GameObject brick : brickBlocks) {
 			brick.draw(canvas);
 		}
 		game_width = canvas.getWidth();
@@ -127,20 +121,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		int ball_y = (int) ball.getY();
 		int ball_x = (int) ball.getX();
 
-		// paddle collision
-		if (paddle.collide(ball)) {
-			mp.start();
-			if (ball_bottom > paddle.getY() && ball_bottom < paddle.getY() + 20) {
-				ball.setMoveY(-ball.getMoveY());
-			}
-		}
-
 		// Bottom Collision
 		if (ball_bottom > game_height) {
-			ball.setMoveY(-ball.getMoveY());
 			// player loses
 			mGameLogic.setGameState(GameLogic.LOST);
 			return;
+		}
+
+		// paddle collision
+		if (paddle.collide(ball)) {
+			mp.start();
+			if (ball_bottom > paddle.getY() && ball_bottom < paddle.getY() + 50) {
+				ball.setMoveY(-ball.getMoveY());
+			}
 		}
 
 		// Top collision
@@ -158,21 +151,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			ball.setMoveX(-ball.getMoveX());
 		}
 
+		boolean allBricksAreNotDead = false;
 		// check for brick collisions
-		for (SpriteObject brick : brickBlocks) {
+		for (GameObject brick : brickBlocks) {
 			if (ball.collide(brick)) {
-				brick.setState(SpriteObject.DEAD);
+				brick.setState(GameObject.DEAD);
 				mp.start();
 				int block_bottom = (int) (brick.getY() + brick.getBitmap().getHeight());
 				int block_right = (int) (brick.getX() + brick.getBitmap().getWidth());
 
 				// hits bottom of block
 				if (ball_y > block_bottom - 5) {
-					ball.setMoveY(ball.getMoveY());
+					ball.setMoveY(-ball.getMoveY());
 				}
 				// hits top of block
 				else if (ball_bottom < brick.getY() + 5) {
-					ball.setMoveY(-ball.getMoveY());
+					ball.setMoveY(ball.getMoveY());
 				}
 				// hits from right
 				else if (ball_x > block_right - 5) {
@@ -183,18 +177,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					ball.setMoveX(-ball.getMoveX());
 				}
 			}
-		}
-
-		boolean allBricksAreNotDead = false;
-		for (SpriteObject brick : brickBlocks) {
-			if (brick.getState() != SpriteObject.DEAD) {
+			if (brick.getState() != GameObject.DEAD) {
 				allBricksAreNotDead = true;
-				break;
 			}
 		}
+
 		if (!allBricksAreNotDead) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 			}
 			mGameLogic.setGameState(GameLogic.WIN);
@@ -202,7 +192,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		// perform specific updates
-		for (SpriteObject brick : brickBlocks) {
+		for (GameObject brick : brickBlocks) {
 			brick.update(adj_mov);
 		}
 		paddle.update(adj_mov);
@@ -212,21 +202,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void processMotionEvent(InputObject input) {
 		paddle.setX(input.x);
-	}
-
-	public void processKeyEvent(InputObject input) {
-
-	}
-
-	public void processOrientationEvent(float orientation[]) {
-
-		float roll = orientation[2];
-		if (roll < -40) {
-			// sprite.setMoveX(2);
-		} else if (roll > 40) {
-			// sprite.setMoveX(-2);
-		}
-
 	}
 
 	public void finish(String status) {

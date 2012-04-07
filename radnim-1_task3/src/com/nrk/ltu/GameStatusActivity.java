@@ -14,14 +14,14 @@ public class GameStatusActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.gamestatus);
 
-		setContentView(R.layout.loosegame);
 		Intent intent = getIntent();
 		String status = intent.getExtras().getString(STATUS);
-
-		TextView textView = (TextView) findViewById(R.id.textView1);
+		TextView textView = (TextView) findViewById(R.id.gamestatus);
 		textView.setText(status);
-		Button button = (Button) findViewById(R.id.button1);
+
+		Button button = (Button) findViewById(R.id.tryagain);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override

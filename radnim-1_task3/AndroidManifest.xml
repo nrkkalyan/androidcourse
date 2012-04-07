@@ -13,7 +13,6 @@
             </intent-filter>
         </activity>
 	  <activity android:name=".GameStatusActivity"></activity>
-	  <activity android:name=".GameViewActivity"></activity>
     </application>
 
 </manifest>
