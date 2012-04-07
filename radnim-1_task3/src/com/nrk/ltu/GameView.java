@@ -35,12 +35,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		mGameLogic = new GameLogic(getHolder(), this);
 		createInputObjectPool();
 
-		int totalNumberOfBricks = 7;
+		int totalNumberOfBricks = 5;
 		int x_coord = 0;
 		int y_coord = 50;
 		brickBlocks = new GameObject[totalNumberOfBricks];
 		for (int i = 0; i < totalNumberOfBricks; i++) {
-			x_coord += 30;
+			x_coord += 40;
 			brickBlocks[i] = new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.block), x_coord, y_coord);
 		}
 
@@ -89,8 +89,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		mGameLogic.setGameState(GameLogic.RUNNING);
 		mGameLogic.start();
 
-		ball.setMoveY(5);
-		ball.setMoveX(5);
+		ball.setMoveY(4);
+		ball.setMoveX(4);
 
 	}
 
@@ -161,19 +161,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				int block_right = (int) (brick.getX() + brick.getBitmap().getWidth());
 
 				// hits bottom of block
-				if (ball_y > block_bottom - 5) {
+				if (ball_y > block_bottom - 10) {
 					ball.setMoveY(-ball.getMoveY());
 				}
 				// hits top of block
-				else if (ball_bottom < brick.getY() + 5) {
-					ball.setMoveY(ball.getMoveY());
+				else if (ball_bottom < brick.getY() + 10) {
+					ball.setMoveY(-ball.getMoveY());
 				}
 				// hits from right
-				else if (ball_x > block_right - 5) {
+				else if (ball_x > block_right - 10) {
 					ball.setMoveX(ball.getMoveX());
 				}
 				// hits from left
-				else if (ball_right < brick.getX() + 5) {
+				else if (ball_right < brick.getX() + 10) {
 					ball.setMoveX(-ball.getMoveX());
 				}
 			}
