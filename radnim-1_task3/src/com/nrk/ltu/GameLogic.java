@@ -11,7 +11,7 @@ public class GameLogic extends Thread {
 	public static final int LOST = 0;
 	public static final int WIN = 1;
 	public static final int RUNNING = 2;
-	private InputObject inputObject = null;
+	private int x;
 
 	public GameLogic(SurfaceHolder surfaceHolder, GameView mGameView) {
 		super();
@@ -25,7 +25,7 @@ public class GameLogic extends Thread {
 
 	@Override
 	public void run() {
-		long time_orig = System.currentTimeMillis();
+		long time_orig = System.nanoTime();
 		long time_interim;
 		Canvas canvas = null;
 
@@ -41,9 +41,9 @@ public class GameLogic extends Thread {
 					} catch (InterruptedException e1) {
 					}
 
-					time_interim = System.currentTimeMillis();
+					time_interim = System.nanoTime();
 					int adj_mov = (int) (time_interim - time_orig);
-					processInput();
+					mGameView.processMotionEvent(x);
 					time_orig = time_interim;
 					this.mGameView.onDraw(canvas);
 					mGameView.update(adj_mov);
@@ -64,14 +64,8 @@ public class GameLogic extends Thread {
 		}
 	}
 
-	public void feedInput(InputObject input) {
-		inputObject = input;
-	}
-
-	private void processInput() {
-		if (inputObject != null && inputObject.eventType == InputObject.EVENT_TYPE_TOUCH) {
-			mGameView.processMotionEvent(inputObject);
-		}
+	public void setX(int input) {
+		x = input;
 	}
 
 }

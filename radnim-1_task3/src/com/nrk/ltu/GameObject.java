@@ -80,8 +80,6 @@ public class GameObject {
 		if (state == ALIVE) {
 			x += x_move;
 			y += y_move;
-		} else {
-			bitmap.recycle();
 		}
 	}
 

@@ -15,7 +15,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private GameObject ball;
 
 	private GameLogic mGameLogic;
-	private InputObject inputObjectPool;
 	private int game_width;
 	private int game_height;
 
@@ -31,7 +30,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		ball = new GameObject(BitmapFactory.decodeResource(getResources(), R.drawable.ball), 0, 80);
 		mGameLogic = new GameLogic(getHolder(), this);
-		createInputObjectPool();
 
 		int totalNumberOfBricks = 5;
 		int x_coord = 0;
@@ -48,20 +46,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		setSoundEffectsEnabled(true);
 	}
 
-	private void createInputObjectPool() {
-		inputObjectPool = new InputObject();
-	}
-
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		InputObject input = inputObjectPool;
-		input.useEvent(event);
-		mGameLogic.feedInput(input);
-
-		try {
-			Thread.sleep(16);
-		} catch (InterruptedException e) {
-		}
+		mGameLogic.setX((int) event.getX());
 		return true;
 	}
 
@@ -116,9 +103,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		// paddle collision
 		if (paddle.collide(ball)) {
 			mp.start();
-			if (ball_bottom > paddle.getY() && ball_bottom < paddle.getY() + 50) {
-				ball.setMoveY(-ball.getMoveY());
-			}
+			// if (ball_bottom > paddle.getY() && ball_bottom < paddle.getY() +
+			// 50) {
+			ball.setMoveY(-ball.getMoveY());
+			// }
 		}
 
 		// Top collision
@@ -168,10 +156,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		if (!allBricksAreNotDead) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-			}
 			mGameLogic.setGameState(GameLogic.WIN);
 			return;
 		}
@@ -185,8 +169,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 
-	public void processMotionEvent(InputObject input) {
-		paddle.setX(input.x);
+	public void processMotionEvent(int input) {
+		paddle.setX(input);
 	}
 
 	public void finish(String status) {
