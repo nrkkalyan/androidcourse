@@ -6,22 +6,6 @@ import android.os.Bundle;
 
 public class MainActivity extends Activity {
 
-	// @Override
-	// public void onCreate(Bundle savedInstanceState) {
-	// super.onCreate(savedInstanceState);
-	// setContentView(R.layout.main);
-	// Button button = (Button) findViewById(R.id.buttonPlay);
-	// button.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// Intent intent = new Intent(MainActivity.this, GameViewActivity.class);
-	// startActivity(intent);
-	// }
-	// });
-	//
-	// }
-
 	private GameView mGameView;
 
 	@Override

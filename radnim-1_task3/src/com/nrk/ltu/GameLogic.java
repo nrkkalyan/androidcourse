@@ -1,7 +1,5 @@
 package com.nrk.ltu;
 
-import java.util.concurrent.ArrayBlockingQueue;
-
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
@@ -13,8 +11,7 @@ public class GameLogic extends Thread {
 	public static final int LOST = 0;
 	public static final int WIN = 1;
 	public static final int RUNNING = 2;
-	private ArrayBlockingQueue<InputObject> inputQueue = new ArrayBlockingQueue<InputObject>(20);
-	private Object inputQueueMutex = new Object();
+	private InputObject inputObject = null;
 
 	public GameLogic(SurfaceHolder surfaceHolder, GameView mGameView) {
 		super();
@@ -68,27 +65,12 @@ public class GameLogic extends Thread {
 	}
 
 	public void feedInput(InputObject input) {
-		synchronized (inputQueueMutex) {
-			try {
-				inputQueue.put(input);
-			} catch (InterruptedException e) {
-			}
-		}
+		inputObject = input;
 	}
 
 	private void processInput() {
-		synchronized (inputQueueMutex) {
-			ArrayBlockingQueue<InputObject> inputQueue = this.inputQueue;
-			while (!inputQueue.isEmpty()) {
-				try {
-					InputObject input = inputQueue.take();
-					if (input.eventType == InputObject.EVENT_TYPE_TOUCH) {
-						mGameView.processMotionEvent(input);
-					}
-					input.returnToPool();
-				} catch (InterruptedException e) {
-				}
-			}
+		if (inputObject != null && inputObject.eventType == InputObject.EVENT_TYPE_TOUCH) {
+			mGameView.processMotionEvent(inputObject);
 		}
 	}
 

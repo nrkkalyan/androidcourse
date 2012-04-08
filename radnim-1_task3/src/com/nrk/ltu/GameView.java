@@ -1,7 +1,5 @@
 package com.nrk.ltu;
 
-import java.util.concurrent.ArrayBlockingQueue;
-
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,7 +15,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private GameObject ball;
 
 	private GameLogic mGameLogic;
-	private ArrayBlockingQueue<InputObject> inputObjectPool;
+	private InputObject inputObjectPool;
 	private int game_width;
 	private int game_height;
 
@@ -51,28 +49,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void createInputObjectPool() {
-		inputObjectPool = new ArrayBlockingQueue<InputObject>(20);
-		for (int i = 0; i < 20; i++) {
-			inputObjectPool.add(new InputObject(inputObjectPool));
-		}
+		inputObjectPool = new InputObject();
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		try {
-			int hist = event.getHistorySize();
-			if (hist > 0) {
-				for (int i = 0; i < hist; i++) {
-					InputObject input = inputObjectPool.take();
-					input.useEventHistory(event, i);
-					mGameLogic.feedInput(input);
-				}
-			}
-			InputObject input = inputObjectPool.take();
-			input.useEvent(event);
-			mGameLogic.feedInput(input);
-		} catch (InterruptedException e) {
-		}
+		InputObject input = inputObjectPool;
+		input.useEvent(event);
+		mGameLogic.feedInput(input);
+
 		try {
 			Thread.sleep(16);
 		} catch (InterruptedException e) {
