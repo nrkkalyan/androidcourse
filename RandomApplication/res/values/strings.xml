@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">RandomApplication</string>
+    <string name="random_number">100</string>
+    <string name="random_button_text">New Random</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_random">Random</string>
+
+</resources>
