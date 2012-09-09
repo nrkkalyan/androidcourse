@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BMI" >
+
+    <EditText
+        android:id="@+id/lengthEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="numberDecimal"
+        android:hint="@string/length" />
+
+    <requestFocus />
+
+    <EditText
+        android:id="@+id/weightEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/lengthEditText"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="numberDecimal"
+        android:hint="@string/weigth" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/weightEditText"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:hint="@string/result"
+        android:textSize="25sp"
+        tools:context=".BMI" />
+
+    <Button
+        android:id="@+id/computeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/resultTextView"
+        android:layout_marginTop="30dp"
+        android:text="@string/compute" />
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/computeButton"
+        android:text="@string/reset" />
+
+</RelativeLayout>
