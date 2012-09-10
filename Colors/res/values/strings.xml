@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">Colors</string>
+    <string name="menu_settings">Settings</string>
+    <string name="red">Red:</string>
+    <string name="green">Green:</string>
+    <string name="blue">Blue:</string>
+    <string name="displaycolor">Display Color</string>
+    <string name="title_activity_color_display">ColorDisplay</string>
+
+</resources>

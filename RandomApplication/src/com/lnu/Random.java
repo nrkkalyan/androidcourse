@@ -1,4 +1,4 @@
-package com.lnu.randomapplication;
+package com.lnu;
 
 import android.app.Activity;
 import android.os.Bundle;
