@@ -20,11 +20,11 @@
         android:layout_above="@+id/displayColorButton"
         android:layout_alignRight="@+id/displayColorButton"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="numberSigned"
         android:maxLength="3" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/colorTextView"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
@@ -40,7 +40,7 @@
         android:layout_alignRight="@+id/blueEditText"
         android:layout_marginBottom="22dp"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="numberSigned"
         android:maxLength="3" />
 
     <EditText
@@ -48,11 +48,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/greenEditText"
+        android:layout_alignRight="@+id/greenEditText"
         android:layout_marginBottom="14dp"
-        android:layout_toLeftOf="@+id/textView1"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="numberSigned"
         android:maxLength="3" />
+
+        <requestFocus />
 
     <TextView
         android:id="@+id/textView2"

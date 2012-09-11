@@ -45,7 +45,7 @@ public class BMI extends Activity {
 		});
 	}
 
-	protected double getLongValue(String value) {
+	private double getLongValue(String value) {
 		if (value == null || value.trim().isEmpty()) {
 			return 0;
 		}
