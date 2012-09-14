@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">MyCountries</string>
+    <string name="country">Add Country</string>
+    <string name="year">Year Of Visit</string>
+    <string name="addCountryButton">Add Country</string>
+    <string name="addNewCountryButton">Add New Country</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_my_countries">MyCountries</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_add_country">AddCountry</string>
+
+</resources>

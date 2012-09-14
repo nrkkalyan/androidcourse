@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.text.method.DigitsKeyListener;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
