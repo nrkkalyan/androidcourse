@@ -18,10 +18,8 @@ public class AddCountry extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_country);
-		
 		final EditText countryEditText = (EditText) findViewById(R.id.countryEditText);
 		final EditText yearEditText = (EditText) findViewById(R.id.yearEditText);
-		
 		final Button addCountryButton = (Button) findViewById(R.id.addCountryButton);
 		addCountryButton.setOnClickListener(new OnClickListener() {
 			
@@ -31,9 +29,10 @@ public class AddCountry extends Activity {
 				String country = countryEditText.getText().toString();
 				try {
 					validate(year, country);
-					MyCountries.countryVisitedList.add(year + " " + country);
-					Intent myIntent = new Intent(AddCountry.this, MyCountries.class);
-					AddCountry.this.startActivity(myIntent);
+					Intent outData = new Intent();
+					outData.putExtra(MyCountries.COUNTRY, year + " " + country);
+					setResult(Activity.RESULT_OK, outData);
+					finish();
 				} catch (IllegalArgumentException e) {
 					AlertDialog alertDialog = new AlertDialog.Builder(AddCountry.this).create();
 					alertDialog.setMessage(e.getMessage());

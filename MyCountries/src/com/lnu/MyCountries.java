@@ -14,7 +14,10 @@ import android.widget.Button;
 
 public class MyCountries extends ListActivity {
 	
-	static final Set<String>	countryVisitedList	= new HashSet<String>();
+	public static final String		COUNTRY				= "COUNTRY";
+	
+	private ArrayAdapter<String>	adapter				= null;
+	static final Set<String>		countryVisitedList	= new HashSet<String>();
 	{
 		countryVisitedList.add("2005 France");
 		countryVisitedList.add("2006 UK");
@@ -27,7 +30,7 @@ public class MyCountries extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_countries);
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 		adapter.addAll(countryVisitedList);
 		adapter.sort(String.CASE_INSENSITIVE_ORDER);
 		setListAdapter(adapter);
@@ -38,10 +41,21 @@ public class MyCountries extends ListActivity {
 			@Override
 			public void onClick(View v) {
 				Intent myIntent = new Intent(MyCountries.this, AddCountry.class);
-				MyCountries.this.startActivity(myIntent);
+				startActivityForResult(myIntent, 0);
 			}
 		});
 		
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case 0:
+				if (resultCode == RESULT_OK) {
+					String country = data.getExtras().get(COUNTRY).toString();
+					adapter.add(country);
+				}
+		}
 	}
 	
 	@Override
