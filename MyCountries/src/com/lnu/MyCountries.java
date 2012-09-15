@@ -54,6 +54,7 @@ public class MyCountries extends ListActivity {
 				if (resultCode == RESULT_OK) {
 					String country = data.getExtras().get(COUNTRY).toString();
 					adapter.add(country);
+					adapter.sort(String.CASE_INSENSITIVE_ORDER);
 				}
 		}
 	}
