@@ -123,6 +123,7 @@ public class WeatherForecast {
 		temp = Integer.parseInt(num);
 	}
 	
+	// Need to fine tune
 	public boolean isMorning() {
 		if ((startTime.hour >= 6 && startTime.hour <= 18) && (endTime.hour <= 18 && endTime.hour >= 6)) {
 			
