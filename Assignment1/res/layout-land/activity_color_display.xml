@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/displayColorButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="19dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/displaycolor" />
+
+    <EditText
+        android:id="@+id/blueEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/displayColorButton"
+        android:layout_alignRight="@+id/displayColorButton"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:maxLength="3" />
+
+    <TextView
+        android:id="@+id/colorTextView"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="38dp"
+        android:layout_toRightOf="@+id/displayColorButton" />
+
+    <EditText
+        android:id="@+id/greenEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/blueEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/blueEditText"
+        android:layout_marginBottom="22dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:maxLength="3" />
+
+    <EditText
+        android:id="@+id/redEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/greenEditText"
+        android:layout_alignRight="@+id/greenEditText"
+        android:layout_marginBottom="14dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:maxLength="3" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/redEditText"
+        android:layout_alignParentLeft="true"
+        android:text="@string/red"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/greenEditText"
+        android:layout_alignParentLeft="true"
+        android:text="@string/green"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/blueEditText"
+        android:layout_alignParentLeft="true"
+        android:text="@string/blue"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>

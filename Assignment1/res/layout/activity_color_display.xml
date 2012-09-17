@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/displayColorButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp"
+        android:text="@string/displaycolor" />
+
+    <TextView
+        android:id="@+id/colorTextView"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/redEditText"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/displayColorButton"
+        android:layout_toLeftOf="@+id/greenEditText"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:maxLength="3" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/greenEditText"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/displayColorButton"
+        android:layout_alignLeft="@+id/displayColorButton"
+        android:layout_alignRight="@+id/displayColorButton"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:maxLength="3" />
+
+    <EditText
+        android:id="@+id/blueEditText"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/displayColorButton"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/greenEditText"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:maxLength="3" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/redEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="16dp"
+        android:text="@string/red"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignLeft="@+id/greenEditText"
+        android:text="@string/green"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignLeft="@+id/blueEditText"
+        android:text="@string/blue"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>
