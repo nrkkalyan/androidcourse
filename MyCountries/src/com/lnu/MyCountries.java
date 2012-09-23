@@ -1,10 +1,7 @@
 package com.lnu;
 
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.lnu.mycountries.db.Country;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -16,27 +13,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.lnu.mycountries.db.Country;
+import com.lnu.mycountries.db.CountryDAO;
+
 public class MyCountries extends ListActivity {
 	
-	private static boolean				isSortByYear		= true;
-	private static Comparator<Country>	comparator			= Country.COUNTRY_YEAR_COMPARATOR;
-	public static final String			COUNTRY				= "COUNTRY";
-	public static final String			OLD_COUNTRY			= "OLD_COUNTRY";
+	private static boolean				isSortByYear	= true;
+	private static Comparator<Country>	comparator		= Country.COUNTRY_YEAR_COMPARATOR;
+	public static final String			COUNTRY			= "COUNTRY";
+	public static final String			OLD_COUNTRY		= "OLD_COUNTRY";
 	
-	private ArrayAdapter<Country>		adapter				= null;
-	private static final Set<Country>	countryVisitedList	= new HashSet<Country>();
-	{
-		countryVisitedList.add(new Country(2008, "France"));
-		countryVisitedList.add(new Country(2006, "UK"));
-		countryVisitedList.add(new Country(2009, "USA"));
-	}
+	private ArrayAdapter<Country>		adapter			= null;
+	private CountryDAO					countryDAO;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_countries);
+		countryDAO = new CountryDAO(this);
+		List<Country> allCountries = countryDAO.findAll();
 		adapter = new ArrayAdapter<Country>(this, android.R.layout.simple_list_item_1);
-		adapter.addAll(countryVisitedList);
+		adapter.addAll(allCountries);
 		adapter.sort(comparator);
 		setListAdapter(adapter);
 		
@@ -84,6 +81,7 @@ public class MyCountries extends ListActivity {
 		Country country = adapter.getItem(menuInfo.position);
 		switch (item.getItemId()) {
 			case DELETE:
+				countryDAO.delete(country);
 				adapter.remove(country);
 				return true;
 			case UPDATE:

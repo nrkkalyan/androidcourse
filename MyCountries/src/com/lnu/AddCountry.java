@@ -2,8 +2,6 @@ package com.lnu;
 
 import java.util.Calendar;
 
-import com.lnu.mycountries.db.Country;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -14,18 +12,25 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.lnu.mycountries.db.Country;
+import com.lnu.mycountries.db.CountryDAO;
+
 public class AddCountry extends Activity {
+	
+	private CountryDAO	countryDAO;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_country);
+		countryDAO = new CountryDAO(this);
+		//
 		final EditText countryEditText = (EditText) findViewById(R.id.countryEditText);
 		final EditText yearEditText = (EditText) findViewById(R.id.yearEditText);
 		final Button addOrUpdateCountryButton = (Button) findViewById(R.id.addOrUpdateCountryButton);
 		final Intent intent = getIntent();
 		
-		Object oldCountry = intent.getExtras().get(MyCountries.OLD_COUNTRY);
+		final Object oldCountry = intent.getExtras() != null ? intent.getExtras().get(MyCountries.OLD_COUNTRY) : null;
 		if (oldCountry != null) {
 			addOrUpdateCountryButton.setText(R.string.updateCountry);
 			yearEditText.setText(((Country) oldCountry).getYear() + "");
@@ -37,10 +42,20 @@ public class AddCountry extends Activity {
 			@Override
 			public void onClick(View v) {
 				Integer year = Integer.parseInt(yearEditText.getText().toString());
-				String country = countryEditText.getText().toString();
+				String countryName = countryEditText.getText().toString();
 				try {
-					validate(year, country);
-					intent.putExtra(MyCountries.COUNTRY, new Country(year, country));
+					validate(year, countryName);
+					Country newCountry = null;
+					if (oldCountry != null) {
+						newCountry = (Country) oldCountry;
+						newCountry.setName(countryName);
+						newCountry.setYear(year);
+						countryDAO.update(newCountry);
+					} else {
+						newCountry = new Country(year, countryName);
+						countryDAO.create(newCountry);
+					}
+					intent.putExtra(MyCountries.COUNTRY, newCountry);
 					setResult(Activity.RESULT_OK, intent);
 					finish();
 				} catch (IllegalArgumentException e) {

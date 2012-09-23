@@ -6,15 +6,15 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpenHelper {
 	
 	protected static final String	COLUMN_ID	= "_id";
+	
 	// Database fields
-	private SQLiteDatabase			database;
+	// private SQLiteDatabase database;
 	
 	public BaseEntityDAO(Context context, String databaseName, int dbVersion) {
 		super(context, databaseName, null, dbVersion);
@@ -22,27 +22,6 @@ public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpe
 	
 	public BaseEntityDAO(Context context, int dbVersion) {
 		super(context, "defaultDabase.db", null, dbVersion);
-	}
-	
-	private void open() throws SQLException {
-		database = getWritableDatabase();
-	}
-	
-	@Override
-	public void close() {
-		try {
-			database.close();
-			super.close();
-		} catch (Exception ignore) {
-			// Ignore
-		}
-	}
-	
-	private SQLiteDatabase getDatabase() {
-		if (database == null || !database.isOpen()) {
-			open();
-		}
-		return database;
 	}
 	
 	protected abstract String[] getAllColumns();
@@ -58,10 +37,10 @@ public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpe
 	public Entity create(Entity entity) {
 		ContentValues values = new ContentValues();
 		marshal(values, entity);
-		
+		SQLiteDatabase database = this.getWritableDatabase();
 		try {
-			long insertId = getDatabase().insert(getTableName(), null, values);
-			Cursor cursor = getDatabase().query(getTableName(), getColumns(), COLUMN_ID + " = " + insertId, null, null,
+			long insertId = database.insert(getTableName(), null, values);
+			Cursor cursor = database.query(getTableName(), getColumns(), COLUMN_ID + " = " + insertId, null, null,
 					null, null);
 			try {
 				cursor.moveToFirst();
@@ -93,7 +72,8 @@ public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpe
 		
 		long id = entity.getId();
 		try {
-			getDatabase().delete(getTableName(), "_id=" + id, null);
+			SQLiteDatabase database = this.getWritableDatabase();
+			database.delete(getTableName(), "_id=" + id, null);
 		} finally {
 			// Make sure to close the database
 			close();
@@ -103,8 +83,8 @@ public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpe
 	public Entity find(long id) {
 		String restrict = COLUMN_ID + "=" + id;
 		try {
-			Cursor cursor = getDatabase().query(true, getTableName(), getColumns(), restrict, null, null, null, null,
-					null);
+			SQLiteDatabase database = this.getWritableDatabase();
+			Cursor cursor = database.query(true, getTableName(), getColumns(), restrict, null, null, null, null, null);
 			try {
 				if (cursor != null && cursor.getCount() > 0) {
 					cursor.moveToFirst();
@@ -134,7 +114,8 @@ public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpe
 		marshal(args, entity);
 		String restrict = COLUMN_ID + "= ?" + entity.getId();
 		try {
-			return getDatabase().update(getTableName(), args, restrict, null) > 0;
+			SQLiteDatabase database = this.getWritableDatabase();
+			return database.update(getTableName(), args, restrict, null) > 0;
 		} finally {
 			// Make sure to close the database
 			close();
@@ -144,7 +125,8 @@ public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpe
 	public List<Entity> findAll() {
 		List<Entity> tasks = new ArrayList<Entity>();
 		try {
-			Cursor cursor = getDatabase().query(getTableName(), getColumns(), null, null, null, null, null);
+			SQLiteDatabase database = this.getWritableDatabase();
+			Cursor cursor = database.query(getTableName(), getColumns(), null, null, null, null, null);
 			try {
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast()) {
