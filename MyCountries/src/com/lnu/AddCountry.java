@@ -20,18 +20,26 @@ public class AddCountry extends Activity {
 		setContentView(R.layout.activity_add_country);
 		final EditText countryEditText = (EditText) findViewById(R.id.countryEditText);
 		final EditText yearEditText = (EditText) findViewById(R.id.yearEditText);
-		final Button addCountryButton = (Button) findViewById(R.id.addCountryButton);
-		addCountryButton.setOnClickListener(new OnClickListener() {
+		final Button addOrUpdateCountryButton = (Button) findViewById(R.id.addOrUpdateCountryButton);
+		final Intent intent = getIntent();
+		
+		Object oldCountry = intent.getExtras().get(MyCountries.OLD_COUNTRY);
+		if (oldCountry != null) {
+			addOrUpdateCountryButton.setText(R.string.updateCountry);
+			yearEditText.setText(((Country) oldCountry).getYear() + "");
+			countryEditText.setText(((Country) oldCountry).getName());
+		}
+		
+		addOrUpdateCountryButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				String year = yearEditText.getText().toString();
+				Integer year = Integer.parseInt(yearEditText.getText().toString());
 				String country = countryEditText.getText().toString();
 				try {
 					validate(year, country);
-					Intent outData = new Intent();
-					outData.putExtra(MyCountries.COUNTRY, year + " " + country);
-					setResult(Activity.RESULT_OK, outData);
+					intent.putExtra(MyCountries.COUNTRY, new Country(year, country));
+					setResult(Activity.RESULT_OK, intent);
 					finish();
 				} catch (IllegalArgumentException e) {
 					AlertDialog alertDialog = new AlertDialog.Builder(AddCountry.this).create();
@@ -44,13 +52,12 @@ public class AddCountry extends Activity {
 		
 	}
 	
-	private void validate(String year, String country) {
-		if (year.isEmpty() || country.trim().isEmpty()) {
+	private void validate(Integer year, String country) {
+		if (year == null || country.trim().isEmpty()) {
 			throw new IllegalArgumentException("Please enter both year and country.");
 		}
-		Integer y = Integer.valueOf(year);
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-		if (y < 1900 || y > currentYear) {
+		if (year < 1900 || year > currentYear) {
 			throw new IllegalArgumentException("Year must be between (1900 and " + currentYear + ").");
 		}
 	}

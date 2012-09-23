@@ -1,50 +1,45 @@
 package com.lnu;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 
 public class MyCountries extends ListActivity {
 	
-	public static final String		COUNTRY				= "COUNTRY";
+	private static boolean				isSortByYear		= true;
+	private static Comparator<Country>	comparator			= Country.COUNTRY_YEAR_COMPARATOR;
+	public static final String			COUNTRY				= "COUNTRY";
+	public static final String			OLD_COUNTRY			= "OLD_COUNTRY";
 	
-	private ArrayAdapter<String>	adapter				= null;
-	static final Set<String>		countryVisitedList	= new HashSet<String>();
+	private ArrayAdapter<Country>		adapter				= null;
+	private static final Set<Country>	countryVisitedList	= new HashSet<Country>();
 	{
-		countryVisitedList.add("2005 France");
-		countryVisitedList.add("2006 UK");
-		countryVisitedList.add("2007 USA");
-		
+		countryVisitedList.add(new Country(2008, "France"));
+		countryVisitedList.add(new Country(2006, "UK"));
+		countryVisitedList.add(new Country(2009, "USA"));
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_countries);
-		
-		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+		adapter = new ArrayAdapter<Country>(this, android.R.layout.simple_list_item_1);
 		adapter.addAll(countryVisitedList);
-		adapter.sort(String.CASE_INSENSITIVE_ORDER);
+		adapter.sort(comparator);
 		setListAdapter(adapter);
 		
-		Button addNewCountryButton = (Button) findViewById(R.id.addNewCountryButton);
-		addNewCountryButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(MyCountries.this, AddCountry.class);
-				startActivityForResult(myIntent, 0);
-			}
-		});
-		
+		// Add context menu to the list
+		registerForContextMenu(getListView());
 	}
 	
 	@Override
@@ -52,9 +47,15 @@ public class MyCountries extends ListActivity {
 		switch (requestCode) {
 			case 0:
 				if (resultCode == RESULT_OK) {
-					String country = data.getExtras().get(COUNTRY).toString();
+					Bundle extras = data.getExtras();
+					if (extras.containsKey(OLD_COUNTRY)) {
+						Country oldCountry = (Country) extras.get(OLD_COUNTRY);
+						adapter.remove(oldCountry);
+					}
+					
+					Country country = (Country) extras.get(COUNTRY);
 					adapter.add(country);
-					adapter.sort(String.CASE_INSENSITIVE_ORDER);
+					adapter.sort(comparator);
 				}
 		}
 	}
@@ -63,5 +64,60 @@ public class MyCountries extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_my_countries, menu);
 		return true;
+	}
+	
+	public static final int	DELETE	= 0;
+	public static final int	UPDATE	= 1;
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		menu.setHeaderTitle("Select");
+		menu.add(0, DELETE, 0, "Delete");
+		menu.add(0, UPDATE, 1, "Update");
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		Country country = adapter.getItem(menuInfo.position);
+		switch (item.getItemId()) {
+			case DELETE:
+				adapter.remove(country);
+				return true;
+			case UPDATE:
+				Intent intent = new Intent(MyCountries.this, AddCountry.class);
+				intent.putExtra(MyCountries.OLD_COUNTRY, country);
+				startActivityForResult(intent, 0);
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.sort: {
+				if (isSortByYear) {
+					isSortByYear = false;
+					comparator = Country.COUNTRY_NAME_COMPARATOR;
+					item.setTitle(R.string.sortByName);
+				} else {
+					isSortByYear = true;
+					comparator = Country.COUNTRY_YEAR_COMPARATOR;
+					item.setTitle(R.string.sortByYear);
+				}
+				adapter.sort(comparator);
+				return true;
+			}
+			case R.id.add_country: {
+				Intent myIntent = new Intent(MyCountries.this, AddCountry.class);
+				startActivityForResult(myIntent, 0);
+				return true;
+			}
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+		
 	}
 }
