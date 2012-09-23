@@ -3,6 +3,7 @@ package com.lnu;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,25 +29,32 @@ public class MyCountries extends ListActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_my_countries);
-		countryDAO = new CountryDAO(this);
-		List<Country> allCountries = countryDAO.findAll();
-		adapter = new ArrayAdapter<Country>(this, android.R.layout.simple_list_item_1);
-		adapter.addAll(allCountries);
-		adapter.sort(comparator);
-		setListAdapter(adapter);
-		
-		// Add context menu to the list
-		registerForContextMenu(getListView());
+		try {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_my_countries);
+			countryDAO = new CountryDAO(this);
+			List<Country> allCountries = countryDAO.findAll();
+			adapter = new ArrayAdapter<Country>(this, android.R.layout.simple_list_item_1);
+			adapter.addAll(allCountries);
+			adapter.sort(comparator);
+			setListAdapter(adapter);
+			
+			// Add context menu to the list
+			registerForContextMenu(getListView());
+		} catch (Exception e) {
+			e.printStackTrace();
+			AlertDialog alertDialog = new AlertDialog.Builder(MyCountries.this).create();
+			alertDialog.setMessage(e.getMessage());
+			alertDialog.show();
+		}
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		switch (requestCode) {
 			case 0:
 				if (resultCode == RESULT_OK) {
-					Bundle extras = data.getExtras();
+					Bundle extras = intent.getExtras();
 					if (extras.containsKey(OLD_COUNTRY)) {
 						Country oldCountry = (Country) extras.get(OLD_COUNTRY);
 						adapter.remove(oldCountry);
@@ -77,21 +85,29 @@ public class MyCountries extends ListActivity {
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-		Country country = adapter.getItem(menuInfo.position);
-		switch (item.getItemId()) {
-			case DELETE:
-				countryDAO.delete(country);
-				adapter.remove(country);
-				return true;
-			case UPDATE:
-				Intent intent = new Intent(MyCountries.this, AddCountry.class);
-				intent.putExtra(MyCountries.OLD_COUNTRY, country);
-				startActivityForResult(intent, 0);
-				return true;
-			default:
-				return super.onContextItemSelected(item);
+		try {
+			AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+			Country country = adapter.getItem(menuInfo.position);
+			switch (item.getItemId()) {
+				case DELETE:
+					countryDAO.delete(country);
+					adapter.remove(country);
+					return true;
+				case UPDATE:
+					Intent intent = new Intent(MyCountries.this, AddCountry.class);
+					intent.putExtra(MyCountries.OLD_COUNTRY, country);
+					startActivityForResult(intent, 0);
+					return true;
+				default:
+					return super.onContextItemSelected(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			AlertDialog alertDialog = new AlertDialog.Builder(MyCountries.this).create();
+			alertDialog.setMessage(e.getMessage());
+			alertDialog.show();
 		}
+		return true;
 	}
 	
 	@Override

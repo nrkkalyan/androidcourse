@@ -40,19 +40,8 @@ public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpe
 		SQLiteDatabase database = this.getWritableDatabase();
 		try {
 			long insertId = database.insert(getTableName(), null, values);
-			Cursor cursor = database.query(getTableName(), getColumns(), COLUMN_ID + " = " + insertId, null, null,
-					null, null);
-			try {
-				cursor.moveToFirst();
-				return cursorToEntity(cursor);
-			} finally {
-				// Make sure to close the cursor
-				try {
-					cursor.close();
-				} catch (Exception ignore) {
-					// Ignore
-				}
-			}
+			entity.setId(insertId);
+			return entity;
 		} finally {
 			// Make sure to close the database
 			close();

@@ -58,7 +58,8 @@ public class AddCountry extends Activity {
 					intent.putExtra(MyCountries.COUNTRY, newCountry);
 					setResult(Activity.RESULT_OK, intent);
 					finish();
-				} catch (IllegalArgumentException e) {
+				} catch (Exception e) {
+					e.printStackTrace();
 					AlertDialog alertDialog = new AlertDialog.Builder(AddCountry.this).create();
 					alertDialog.setMessage(e.getMessage());
 					alertDialog.show();
@@ -70,7 +71,7 @@ public class AddCountry extends Activity {
 	}
 	
 	private void validate(String year, String country) {
-		if (year == null || country.trim().isEmpty()) {
+		if (year.trim().isEmpty() || country.trim().isEmpty()) {
 			throw new IllegalArgumentException("Please enter both year and country.");
 		}
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
