@@ -5,9 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.lnu.db.BaseEntityDataSource;
+import com.lnu.db.BaseEntityDAO;
 
-public class CountryDataSource extends BaseEntityDataSource<Country> {
+public class CountryDAO extends BaseEntityDAO<Country> {
 	
 	private static final String	COUNTRIES_TABLE_NAME	= "countries";
 	
@@ -22,7 +22,7 @@ public class CountryDataSource extends BaseEntityDataSource<Country> {
 																+ COLUMN_YEAR_OF_VISIT + " integer not null, "
 																+ COLUMN_COUNTRY_NAME + " text not null);";
 	
-	public CountryDataSource(Context context) {
+	public CountryDAO(Context context) {
 		super(context, DATABASE_NAME, DATABASE_VERSION);
 	}
 	

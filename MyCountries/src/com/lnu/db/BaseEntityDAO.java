@@ -10,17 +10,17 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public abstract class BaseEntityDataSource<Entity extends BaseEntity> extends SQLiteOpenHelper {
+public abstract class BaseEntityDAO<Entity extends BaseEntity> extends SQLiteOpenHelper {
 	
 	protected static final String	COLUMN_ID	= "_id";
 	// Database fields
 	private SQLiteDatabase			database;
 	
-	public BaseEntityDataSource(Context context, String databaseName, int dbVersion) {
+	public BaseEntityDAO(Context context, String databaseName, int dbVersion) {
 		super(context, databaseName, null, dbVersion);
 	}
 	
-	public BaseEntityDataSource(Context context, int dbVersion) {
+	public BaseEntityDAO(Context context, int dbVersion) {
 		super(context, "defaultDabase.db", null, dbVersion);
 	}
 	
