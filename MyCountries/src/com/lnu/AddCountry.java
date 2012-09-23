@@ -2,6 +2,8 @@ package com.lnu;
 
 import java.util.Calendar;
 
+import com.lnu.mycountries.db.Country;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;

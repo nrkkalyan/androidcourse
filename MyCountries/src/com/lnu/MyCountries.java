@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.lnu.mycountries.db.Country;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
