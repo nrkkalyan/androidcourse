@@ -41,7 +41,7 @@ public class AddCountry extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Integer year = Integer.parseInt(yearEditText.getText().toString());
+				String year = yearEditText.getText().toString();
 				String countryName = countryEditText.getText().toString();
 				try {
 					validate(year, countryName);
@@ -49,10 +49,10 @@ public class AddCountry extends Activity {
 					if (oldCountry != null) {
 						newCountry = (Country) oldCountry;
 						newCountry.setName(countryName);
-						newCountry.setYear(year);
+						newCountry.setYear(Integer.parseInt(year));
 						countryDAO.update(newCountry);
 					} else {
-						newCountry = new Country(year, countryName);
+						newCountry = new Country(Integer.parseInt(year), countryName);
 						countryDAO.create(newCountry);
 					}
 					intent.putExtra(MyCountries.COUNTRY, newCountry);
@@ -69,12 +69,13 @@ public class AddCountry extends Activity {
 		
 	}
 	
-	private void validate(Integer year, String country) {
+	private void validate(String year, String country) {
 		if (year == null || country.trim().isEmpty()) {
 			throw new IllegalArgumentException("Please enter both year and country.");
 		}
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-		if (year < 1900 || year > currentYear) {
+		Integer y = Integer.parseInt(year);
+		if (y < 1900 || y > currentYear) {
 			throw new IllegalArgumentException("Year must be between (1900 and " + currentYear + ").");
 		}
 	}
