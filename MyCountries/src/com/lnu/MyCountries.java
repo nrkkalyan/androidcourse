@@ -1,15 +1,17 @@
 package com.lnu;
 
 import java.util.Comparator;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,34 +21,52 @@ import com.lnu.mycountries.db.CountryDAO;
 
 public class MyCountries extends ListActivity {
 	
-	private static boolean				isSortByYear	= true;
-	private static Comparator<Country>	comparator		= Country.COUNTRY_YEAR_COMPARATOR;
-	public static final String			COUNTRY			= "COUNTRY";
-	public static final String			OLD_COUNTRY		= "OLD_COUNTRY";
+	private boolean					isSortByYear;
+	private Comparator<Country>		comparator;
+	public static final String		COUNTRY		= "COUNTRY";
+	public static final String		OLD_COUNTRY	= "OLD_COUNTRY";
 	
-	private ArrayAdapter<Country>		adapter			= null;
-	private CountryDAO					countryDAO;
+	private ArrayAdapter<Country>	adapter		= null;
+	private CountryDAO				countryDAO;
+	private final String			SORT_KEY	= "SORT_BY";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
 			super.onCreate(savedInstanceState);
+			
 			setContentView(R.layout.activity_my_countries);
 			countryDAO = new CountryDAO(this);
-			List<Country> allCountries = countryDAO.findAll();
 			adapter = new ArrayAdapter<Country>(this, android.R.layout.simple_list_item_1);
-			adapter.addAll(allCountries);
-			adapter.sort(comparator);
+			adapter.addAll(countryDAO.findAll());
 			setListAdapter(adapter);
+			
+			isSortByYear = getPreferences(0).getBoolean(SORT_KEY, true);
+			if (isSortByYear) {
+				comparator = Country.COUNTRY_YEAR_COMPARATOR;
+			} else {
+				comparator = Country.COUNTRY_NAME_COMPARATOR;
+			}
+			adapter.sort(comparator);
 			
 			// Add context menu to the list
 			registerForContextMenu(getListView());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			AlertDialog alertDialog = new AlertDialog.Builder(MyCountries.this).create();
 			alertDialog.setMessage(e.getMessage());
 			alertDialog.show();
 		}
+	}
+	
+	@Override
+	protected void onStop() {
+		SharedPreferences sp = getPreferences(0);
+		Editor edit = sp.edit();
+		edit.putBoolean(SORT_KEY, isSortByYear);
+		edit.commit();
+		super.onStop();
 	}
 	
 	@Override
@@ -70,6 +90,13 @@ public class MyCountries extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_my_countries, menu);
+		SubMenu subMenu = menu.getItem(0).getSubMenu();
+		MenuItem item = subMenu.getItem(0);
+		if (isSortByYear) {
+			item.setTitle(R.string.sortByName);
+		} else {
+			item.setTitle(R.string.sortByYear);
+		}
 		return true;
 	}
 	
@@ -113,14 +140,13 @@ public class MyCountries extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.sort: {
+			case R.id.sort_menu: {
+				isSortByYear = item.getTitle().toString().toLowerCase().contains("year");
 				if (isSortByYear) {
-					isSortByYear = false;
-					comparator = Country.COUNTRY_NAME_COMPARATOR;
+					comparator = Country.COUNTRY_YEAR_COMPARATOR;
 					item.setTitle(R.string.sortByName);
 				} else {
-					isSortByYear = true;
-					comparator = Country.COUNTRY_YEAR_COMPARATOR;
+					comparator = Country.COUNTRY_NAME_COMPARATOR;
 					item.setTitle(R.string.sortByYear);
 				}
 				adapter.sort(comparator);

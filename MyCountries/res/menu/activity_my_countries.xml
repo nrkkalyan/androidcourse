@@ -7,7 +7,7 @@
         android:showAsAction="ifRoom|withText">
         <menu>
             <item
-                android:id="@+id/sort"
+                android:id="@+id/sort_menu"
                 android:title="@string/sortByName"/> 
             <item
                 android:id="@+id/add_country"
