@@ -12,6 +12,9 @@
             <item
                 android:id="@+id/add_country"
                 android:title="@string/addNewCountry"/>
+            <item
+                android:id="@+id/prefs"
+                android:title="@string/prefs"/>
         </menu>
     </item>
 

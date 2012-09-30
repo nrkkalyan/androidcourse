@@ -7,7 +7,9 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,20 +17,35 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.lnu.mycountries.db.Country;
 import com.lnu.mycountries.db.CountryDAO;
 
 public class MyCountries extends ListActivity {
 	
+	private enum RequestCode {
+		ADD_COUNTRY(0), SET_PREFS(1);
+		private final int	requestCode;
+		
+		private RequestCode(int code) {
+			requestCode = code;
+		}
+		
+	}
+	
 	private boolean					isSortByYear;
 	private Comparator<Country>		comparator;
-	public static final String		COUNTRY		= "COUNTRY";
-	public static final String		OLD_COUNTRY	= "OLD_COUNTRY";
+	public static final String		COUNTRY			= "COUNTRY";
+	public static final String		OLD_COUNTRY		= "OLD_COUNTRY";
 	
-	private ArrayAdapter<Country>	adapter		= null;
+	private ArrayAdapter<Country>	adapter			= null;
 	private CountryDAO				countryDAO;
-	private final String			SORT_KEY	= "SORT_BY";
+	private final String			SORT_KEY		= "SORT_BY";
+	private ListView				listView;
+	
+	private final String			PREF_BG_COLOR	= "pref_bg_color";
+	private final String			PREF_ROTATION	= "pref_rotation";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +67,9 @@ public class MyCountries extends ListActivity {
 			adapter.sort(comparator);
 			
 			// Add context menu to the list
-			registerForContextMenu(getListView());
+			listView = getListView();
+			registerForContextMenu(listView);
+			updateAccordingToPreferences();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,7 +91,7 @@ public class MyCountries extends ListActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		switch (requestCode) {
-			case 0:
+			case 0: {// RequestCode.ADD_COUNTRY
 				if (resultCode == RESULT_OK) {
 					Bundle extras = intent.getExtras();
 					if (extras.containsKey(OLD_COUNTRY)) {
@@ -84,7 +103,29 @@ public class MyCountries extends ListActivity {
 					adapter.add(country);
 					adapter.sort(comparator);
 				}
+				break;
+			}
+			case 1: {// RequestCode.SET_PREFS
+				updateAccordingToPreferences();
+				break;
+			}
 		}
+	}
+	
+	private void updateAccordingToPreferences() {
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		String bg_color = sp.getString(PREF_BG_COLOR, "White");
+		int color = Color.WHITE;
+		if (bg_color.equalsIgnoreCase("Red")) {
+			color = Color.RED;
+		} else if (bg_color.equalsIgnoreCase("Blue")) {
+			color = Color.BLUE;
+		}
+		listView.setBackgroundColor(color);
+		
+		//
+		float rotation_angle = Float.valueOf(sp.getString(PREF_ROTATION, "0"));
+		listView.setRotation(rotation_angle);
 	}
 	
 	@Override
@@ -123,7 +164,7 @@ public class MyCountries extends ListActivity {
 				case UPDATE:
 					Intent intent = new Intent(MyCountries.this, AddCountry.class);
 					intent.putExtra(MyCountries.OLD_COUNTRY, country);
-					startActivityForResult(intent, 0);
+					startActivityForResult(intent, RequestCode.ADD_COUNTRY.requestCode);
 					return true;
 				default:
 					return super.onContextItemSelected(item);
@@ -154,7 +195,12 @@ public class MyCountries extends ListActivity {
 			}
 			case R.id.add_country: {
 				Intent myIntent = new Intent(MyCountries.this, AddCountry.class);
-				startActivityForResult(myIntent, 0);
+				startActivityForResult(myIntent, RequestCode.ADD_COUNTRY.requestCode);
+				return true;
+			}
+			case R.id.prefs: {
+				Intent myIntent = new Intent(MyCountries.this, MyPreferences.class);
+				startActivityForResult(myIntent, RequestCode.SET_PREFS.requestCode);
 				return true;
 			}
 			default:

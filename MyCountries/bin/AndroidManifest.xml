@@ -20,10 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AddCountry"
-            android:label="@string/title_activity_add_country" >
+        <activity android:name=".AddCountry" >
         </activity>
+        <activity android:name=".MyPreferences" />
     </application>
 
 </manifest>

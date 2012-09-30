@@ -5,7 +5,9 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +19,8 @@ import com.lnu.mycountries.db.CountryDAO;
 
 public class AddCountry extends Activity {
 	
-	private CountryDAO	countryDAO;
+	private CountryDAO		countryDAO;
+	private final String	PREF_RESTRICT_YEAR	= "pref_restrict_year";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +79,9 @@ public class AddCountry extends Activity {
 		}
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 		Integer y = Integer.parseInt(year);
-		if (y < 1900 || y > currentYear) {
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean restrictYear = sp.getBoolean(PREF_RESTRICT_YEAR, true);
+		if (restrictYear && (y < 1900 || y > currentYear)) {
 			throw new IllegalArgumentException("Year must be between (1900 and " + currentYear + ").");
 		}
 	}
