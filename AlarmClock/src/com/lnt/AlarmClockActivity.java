@@ -23,15 +23,20 @@ import android.widget.Toast;
 
 public class AlarmClockActivity extends Activity implements OnClickListener, OnTimeChangedListener {
 	
-	private Runnable	mTicker;
-	private Calendar	mCalendar;
-	private Handler		mHandler;
-	private TextView	currentTimeTextView;
-	private TextView	alarmTimeTextView;
-	private Button		addAlarmButton;
-	private Button		doneAlarmButton;
-	private TimePicker	timePicker;
-	private ImageView	imageView;
+	private Runnable		mTicker;
+	private Calendar		mCalendar;
+	private Handler			mHandler;
+	private TextView		currentTimeTextView;
+	private TextView		alarmTimeTextView;
+	private Button			addAlarmButton;
+	private Button			doneAlarmButton;
+	private Button			resetAlarmButton;
+	private TimePicker		timePicker;
+	private ImageView		bellImageView;
+	private PendingIntent	pendingIntent;
+	private AlarmManager	alarmManager;
+	private Intent			alarmIntent;
+	private TextView		alarmTextView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,18 +44,23 @@ public class AlarmClockActivity extends Activity implements OnClickListener, OnT
 		setContentView(R.layout.activity_alarm_clock);
 		currentTimeTextView = (TextView) findViewById(R.id.currentTimeTextView);
 		alarmTimeTextView = (TextView) findViewById(R.id.alarmTimeTextView);
+		alarmTextView = (TextView) findViewById(R.id.alarmTextView);
+		
+		alarmIntent = new Intent(this, AlarmNotificationActivity.class);
+		pendingIntent = PendingIntent.getActivity(this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		alarmManager = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);
 		setCurrentTime();
 		
 		addAlarmButton = (Button) findViewById(R.id.addAlarmButton);
 		doneAlarmButton = (Button) findViewById(R.id.doneAlarmButton);
+		resetAlarmButton = (Button) findViewById(R.id.resetAlarmButton);
 		timePicker = (TimePicker) findViewById(R.id.timePicker1);
-		imageView = (ImageView) findViewById(R.id.bellImageView);
+		bellImageView = (ImageView) findViewById(R.id.bellImageView);
 		timePicker.setIs24HourView(true);
-		timePicker.setCurrentHour(mCalendar.get(Calendar.HOUR_OF_DAY));
-		timePicker.setCurrentMinute(mCalendar.get(Calendar.MINUTE));
 		
 		addAlarmButton.setOnClickListener(this);
 		doneAlarmButton.setOnClickListener(this);
+		resetAlarmButton.setOnClickListener(this);
 		timePicker.setOnTimeChangedListener(this);
 		
 	}
@@ -59,10 +69,17 @@ public class AlarmClockActivity extends Activity implements OnClickListener, OnT
 	public void onClick(View v) {
 		doneAlarmButton.setVisibility(View.INVISIBLE);
 		addAlarmButton.setVisibility(View.INVISIBLE);
+		resetAlarmButton.setVisibility(View.INVISIBLE);
 		timePicker.setVisibility(View.INVISIBLE);
+		bellImageView.setVisibility(View.INVISIBLE);
+		alarmTextView.setVisibility(View.INVISIBLE);
+		alarmTimeTextView.setVisibility(View.INVISIBLE);
+		alarmTimeTextView.setText(R.string.default_alarm);
 		v.setVisibility(View.INVISIBLE);
 		switch (v.getId()) {
 			case R.id.addAlarmButton: {
+				timePicker.setCurrentHour(mCalendar.get(Calendar.HOUR_OF_DAY));
+				timePicker.setCurrentMinute(mCalendar.get(Calendar.MINUTE));
 				timePicker.setVisibility(View.VISIBLE);
 				doneAlarmButton.setVisibility(View.VISIBLE);
 				onTimeChanged(timePicker, timePicker.getCurrentHour(), timePicker.getCurrentMinute());
@@ -70,7 +87,12 @@ public class AlarmClockActivity extends Activity implements OnClickListener, OnT
 			}
 			case R.id.doneAlarmButton: {
 				setAlarm();
+				break;
+			}
+			case R.id.resetAlarmButton: {
 				addAlarmButton.setVisibility(View.VISIBLE);
+				alarmTimeTextView.setVisibility(View.VISIBLE);
+				alarmManager.cancel(pendingIntent);
 				break;
 			}
 		}
@@ -109,24 +131,25 @@ public class AlarmClockActivity extends Activity implements OnClickListener, OnT
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			alertDialog.setMessage("You can set alarm only after the current time.");
 			alertDialog.show();
+			addAlarmButton.setVisibility(View.VISIBLE);
 			return;
 		}
 		
-		// Create a new PendingIntent and add it to the AlarmManager
-		Intent intent = new Intent(this, AlarmNotificationActivity.class);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		AlarmManager am = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);
-		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
 		// Tell the user about what we did.
 		String msg = "Alarm is set for " + cal.getTime();
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-		imageView.setVisibility(View.VISIBLE);
+		bellImageView.setVisibility(View.VISIBLE);
+		alarmTextView.setText("Alarm Set for:" + alarmHour + ":" + alarmMinute);
+		resetAlarmButton.setVisibility(View.VISIBLE);
+		alarmTextView.setVisibility(View.VISIBLE);
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		imageView.setVisibility(View.INVISIBLE);
+		bellImageView.setVisibility(View.INVISIBLE);
+		alarmTextView.setVisibility(View.INVISIBLE);
 	}
 	
 	@Override

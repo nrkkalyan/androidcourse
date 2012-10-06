@@ -11,21 +11,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class AlarmNotificationActivity extends Activity {
-	private int	soundID;
+	
+	SoundPool	soundPool	= null;
+	int			soundID		= 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alarm_notification);
 		// Load the sound
-		final SoundPool soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-			@Override
-			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-				playSound(soundPool);
-			}
-		});
-		soundID = soundPool.load(this, R.raw.smokealarm, 1);
+		loadSoundPool();
 		
 		Button stopAlarm = (Button) findViewById(R.id.stopAlarmButton);
 		stopAlarm.setOnClickListener(new OnClickListener() {
@@ -33,21 +28,30 @@ public class AlarmNotificationActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				soundPool.stop(soundID);
-				soundPool.unload(soundID);
 				finish();
 			}
 		});
 		
 	}
 	
-	private void playSound(SoundPool soundPool) {
+	@Override
+	protected void onStop() {
+		super.onStop();
+		soundPool.release();
+		soundPool = null;
+	}
+	
+	private void loadSoundPool() {
+		soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+		soundID = soundPool.load(this, R.raw.cowbell, 1);
 		
-		AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-		float actualVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		float maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		float volume = actualVolume / maxVolume;
-		Toast.makeText(this, "Wake up....", Toast.LENGTH_LONG).show();
-		soundPool.play(soundID, volume, volume, 1, -1, 1f);
+		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+			@Override
+			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+				Toast.makeText(AlarmNotificationActivity.this, "Wake up....", Toast.LENGTH_LONG).show();
+				soundPool.play(soundID, 1, 1, 0, -1, 1);
+			}
+		});
 	}
 	
 }
