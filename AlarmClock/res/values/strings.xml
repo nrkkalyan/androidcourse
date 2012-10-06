@@ -7,6 +7,9 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_alarm_clock">AlarmClockActivity</string>
     <string name="default_alarm">--:--</string>
-    
+    <string name="stop_alarm">Stop Alarm</string>
+    <string name="bell">Alarm Set</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_alarm_notification">AlarmNotificationActivity</string>
 
 </resources>

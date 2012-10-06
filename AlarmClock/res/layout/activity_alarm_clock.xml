@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <ImageView
+        android:id="@+id/bellImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/bell"
+        android:visibility="invisible"
+        android:src="@drawable/bell" />
+
     <TextView
         android:id="@+id/currentTimeTextView"
         android:layout_width="fill_parent"
@@ -36,15 +44,6 @@
             android:textSize="20sp" />
         
         <Button
-            android:id="@+id/resetAlarmButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="invisible"
-            android:text="@string/reset_alarm"
-            android:textSize="20sp" />
-        
-        <Button
             android:id="@+id/doneAlarmButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,6 +51,7 @@
             android:visibility="invisible"
             android:text="@string/done_alarm"
             android:textSize="20sp" />
+        
         
     </FrameLayout>
 
