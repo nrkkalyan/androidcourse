@@ -177,6 +177,7 @@ public class MyMp3Player extends ListActivity implements OnClickListener,
 				playButton.setText("Play");
 			} else {
 				mp.start();
+				playButton.setText("Pause");
 			}
 			break;
 		}
