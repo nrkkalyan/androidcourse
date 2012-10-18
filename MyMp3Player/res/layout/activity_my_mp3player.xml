@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <SeekBar
-        android:id="@+id/seekBar1"
+        android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -16,11 +16,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/seekBar1"
+        android:layout_below="@+id/seekBar"
         android:layout_marginTop="22dp" >
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/prevButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:text="Prev" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/playButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -36,15 +36,7 @@
             android:text="Play" />
 
         <Button
-            android:id="@+id/button3"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Pause" />
-
-        <Button
-            android:id="@+id/button4"
+            android:id="@+id/stopButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -52,7 +44,7 @@
             android:text="Stop" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/nextButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -61,7 +53,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
