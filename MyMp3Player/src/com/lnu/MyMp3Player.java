@@ -199,12 +199,14 @@ public class MyMp3Player extends ListActivity implements OnClickListener,
 
 		}
 	}
-
+ 
+	
 	@Override
 	public void onCompletion(MediaPlayer mp) {
+		lastSelectedIndex +=1; 
 		if (lastSelectedIndex >= songsList.size()) {
 			lastSelectedIndex = 0;
 		}
-		playSong(lastSelectedIndex + 1);
+		playSong(lastSelectedIndex);
 	}
 }
