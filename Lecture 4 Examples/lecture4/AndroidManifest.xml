@@ -1,0 +1,64 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dv106.lecture4"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <!--  API level 16 is required for our Notifications -->
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="16" />
+
+    <application
+        android:icon="@drawable/lnu_symbol"
+        android:label="Lecture 4"
+        android:theme="@android:style/Theme.Holo.Light" >
+        <activity
+            android:name=".MainList"
+            android:label="Lecture 4" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+       
+        
+        <!-- Example: MoreIndents -->
+        <activity android:name="MoreIntents" android:label="More Intents"/>
+        <activity android:name="Hello" android:label="Hello Activity"/>
+        <activity android:name="ReadName" android:label="Read Name Activity"/>
+        <activity android:name="ShowTime" android:label="Show Time Activity">
+			<intent-filter>
+                <action android:name="dv106.lecture4.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+          <!-- Example: BroadcastIndents -->
+        <activity android:name="BroadcastIntents" android:label="Broadcasting Demo"/>
+        <receiver android:name="InternalMessageReceiver" android:label="Message Receiver">
+			<intent-filter>
+                <action android:name="dv106.lecture4.BROADCAST" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- Example: NotificationsDemo -->
+        <activity android:name="NotificationsDemo" android:label="Notifications Demo"/>
+        <activity android:name="NotificationDisplay" android:label="Notification Message"/>
+        
+        <!-- Example: ServiceDemo -->
+        <activity android:name="ServiceDemo" android:label="Service Demo"/>
+        <service android:enabled="true" android:name="SlowCountService" />
+        
+        <activity android:name="BinderDemo" android:label="Binder Demo"/>
+        
+        <!-- Example: AlarmDemo -->
+		<activity android:name="AlarmDemo" android:label="Alarm Demo"/>
+		<receiver android:name="MessageReceiver" android:process=":remote" />
+		
+		 <!-- Example: Interacting with the GUI Thread -->
+		<activity android:name="Threading" android:label="GUI Thread Interaction"/>
+		
+    </application>
+
+</manifest>

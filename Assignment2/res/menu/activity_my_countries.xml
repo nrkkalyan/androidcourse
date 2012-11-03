@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/menu_settings"
+        android:title="Options"
+        android:icon="@android:drawable/ic_menu_add"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom|withText">
+        <menu>
+            <item
+                android:id="@+id/sort_menu"
+                android:title="@string/sortByName"/> 
+            <item
+                android:id="@+id/add_country"
+                android:title="@string/addNewCountry"/>
+            <item
+                android:id="@+id/prefs"
+                android:title="@string/prefs"/>
+        </menu>
+    </item>
+
+</menu>

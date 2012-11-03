@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:orientation="vertical" android:padding="4dip"
+    android:gravity="center_horizontal"
+    android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+    <TextView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="Alarm Controller"
+		android:gravity="center" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="20sp" 
+		android:height="60sp" />
+
+    <Button android:id="@+id/one_shot"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+		android:textSize="15sp" 
+        android:text="One Shot Alarm"/>
+
+    <Button android:id="@+id/start_repeating"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"  
+		android:textSize="15sp" 
+        android:text="Start Repeating Alarm" />
+
+    <Button android:id="@+id/stop_repeating"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"  
+		android:textSize="15sp" 
+        android:text="Stop Repeating Alarm" />
+
+</LinearLayout>
+

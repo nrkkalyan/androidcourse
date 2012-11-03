@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/yearEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="74dp"
+        android:ems="10"
+        android:hint="@string/year"
+        android:inputType="numberSigned" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/countryEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="@string/country" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/addOrUpdateCountryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/countryEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="68dp"
+        android:text="@string/addNewCountry" />
+
+</RelativeLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<TextView android:id="@+id/notify_handling" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="Notification Demo"
+		android:gravity="center_vertical" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="15sp" 
+		android:height="200sp" />
+		
+	<Button android:id="@+id/clear_notify_button" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="Done!"
+		android:layout_gravity="center" />
+		
+
+</LinearLayout>

@@ -1,16 +1,16 @@
 package com.lnu;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,32 +22,34 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SimpleAdapter;
 
-public class MyMp3Player extends ListActivity implements OnClickListener,
-		OnItemClickListener, SeekBar.OnSeekBarChangeListener,
-		OnCompletionListener {
+import com.lnu.Mp3PlayerService.LocalBinder;
 
-	private SeekBar songProgressBar;
-	private Button prevButton;
-	private Button playButton;
-	private Button stopButton;
-	private Button nextButton;
-	private static int lastSelectedIndex = -1;
-	private final List<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-	private final SongsManager songsManager = new SongsManager();
-	private MediaPlayer mp = new MediaPlayer();
+public class MyMp3Player extends ListActivity implements OnClickListener,
+		OnItemClickListener, SeekBar.OnSeekBarChangeListener {
+	//
 	private final Handler mHandler = new Handler();
+	private Button nextButton;
+	private Button playButton;
+	private Button prevButton;
+	private SeekBar songProgressBar;
+	private static Mp3PlayerService mService;
+	private static boolean mBound = false;
+
+	private Button stopButton;
+
+	private final Runnable mUpdateTimeTask = new Runnable() {
+		@Override
+		public void run() {
+			songProgressBar.setProgress(mService.getCurrentProgress());
+			mHandler.postDelayed(this, 100);
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_mp3player);
 		try {
-			loadSongs();
-			String[] from = { "name" };
-			int[] to = { android.R.id.text1 };
-			ListAdapter adapter = new SimpleAdapter(this, songsList,
-					android.R.layout.simple_list_item_1, from, to);
-			setListAdapter(adapter);
 
 			ListView lv = getListView();
 			lv.setOnItemClickListener(this);
@@ -61,7 +63,23 @@ public class MyMp3Player extends ListActivity implements OnClickListener,
 			stopButton.setOnClickListener(this);
 			songProgressBar = (SeekBar) findViewById(R.id.seekBar);
 			songProgressBar.setOnSeekBarChangeListener(this);
-			mp.setOnCompletionListener(this);
+
+			if (!mBound) {
+				Intent intent = new Intent(this, Mp3PlayerService.class);
+				bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+			}
+
+			if (mService != null && mService.isPlaying()) {
+				playButton.setText("Pause");
+				updateProgressBar();
+			}
+
+			String[] from = { "name" };
+			int[] to = { android.R.id.text1 };
+			ListAdapter adapter = new SimpleAdapter(MyMp3Player.this,
+					SongsManager.getSongsList(),
+					android.R.layout.simple_list_item_1, from, to);
+			setListAdapter(adapter);
 
 		} catch (Exception e) {
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -71,15 +89,92 @@ public class MyMp3Player extends ListActivity implements OnClickListener,
 
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		// Unbind from the service
+		if (mBound && !mService.isPlaying()) {
+			unbindService(mConnection);
+			mBound = false;
+		}
+	}
+
 	private void loadSongs() {
-		for (File song : songsManager.getSongsList()) {
-			HashMap<String, String> item = new HashMap<String, String>();
-			item.put("name", song.getName());
-			item.put("songPath", song.getPath());
-			songsList.add(item);
+		if (mService == null) {
+			return;
+		}
+		mService.clear();
+		for (HashMap<String, String> song : SongsManager.getSongsList()) {
+			mService.addSong(song);
 		}
 
 	}
+
+	@Override
+	public void onClick(View v) {
+
+		switch (v.getId()) {
+			case R.id.playButton: {
+				mService.playSong();
+				break;
+			}
+			case R.id.nextButton: {
+				mService.playNextSong();
+				break;
+			}
+			case R.id.prevButton: {
+				mService.playPrevSong();
+
+				break;
+			}
+			case R.id.stopButton: {
+				mService.stopSong();
+				mHandler.removeCallbacks(mUpdateTimeTask);
+				songProgressBar.setProgress(0);
+				playButton.setText("Play");
+
+				break;
+			}
+		}
+		if (mService.isPlaying()) {
+			playButton.setText("Pause");
+			updateProgressBar();
+		} else {
+			playButton.setText("Play");
+		}
+	}
+
+	private void updateProgressBar() {
+		playButton.setText("Pause");
+		songProgressBar.setProgress(0);
+		songProgressBar.setMax(100);
+		mHandler.postDelayed(mUpdateTimeTask, 100);
+	}
+
+	/** Defines callbacks for service binding, passed to bindService() */
+	private final ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			try {
+				LocalBinder binder = (LocalBinder) service;
+				mService = binder.getService();
+				mBound = true;
+				loadSongs();
+
+			} catch (Exception e) {
+				AlertDialog alertDialog = new AlertDialog.Builder(
+						MyMp3Player.this).create();
+				alertDialog.setMessage(e.getMessage());
+				alertDialog.show();
+			}
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			mBound = false;
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,61 +185,13 @@ public class MyMp3Player extends ListActivity implements OnClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		playSong(position);
+		mService.playSong(position);
+		playButton.setText("Pause");
+		updateProgressBar();
 	}
-
-	private void playSong(int position) {
-		try {
-			if (songsList.isEmpty()) {
-				throw new RuntimeException("No Mp3 Songs found.");
-			}
-			if (position < 0) {
-				position = 0;
-			} else if (position >= songsList.size()) {
-				position = songsList.size() - 1;
-			}
-			lastSelectedIndex = position;
-			if (mp == null) {
-				mp = new MediaPlayer();
-				mp.setOnCompletionListener(this);
-			}
-			mp.reset();
-			mp.setDataSource(songsList.get(position).get("songPath"));
-			mp.prepare();
-			mp.start();
-			playButton.setText("Pause");
-			songProgressBar.setProgress(0);
-			songProgressBar.setMax(100);
-			updateProgressBar();
-		} catch (Exception e) {
-			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setMessage(e.getMessage());
-			alertDialog.show();
-		}
-	}
-
-	private void updateProgressBar() {
-		mHandler.postDelayed(mUpdateTimeTask, 100);
-	}
-
-	private Runnable mUpdateTimeTask = new Runnable() {
-		public void run() {
-			long totalDuration = mp.getDuration();
-			long currentDuration = mp.getCurrentPosition();
-			long currentSeconds = (int) (currentDuration / 1000);
-			long totalSeconds = (int) (totalDuration / 1000);
-			int progress = Double.valueOf(
-					(((double) currentSeconds) / totalSeconds) * 100)
-					.intValue();
-			songProgressBar.setProgress(progress);
-			mHandler.postDelayed(this, 100);
-		}
-	};
 
 	@Override
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -155,59 +202,8 @@ public class MyMp3Player extends ListActivity implements OnClickListener,
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		mHandler.removeCallbacks(mUpdateTimeTask);
-		int totalDuration = mp.getDuration();
-		int currentDuration = 0;
-		totalDuration = (int) (totalDuration / 1000);
-		currentDuration = (int) ((((double) seekBar.getProgress()) / 100) * totalDuration) * 1000;
-		int currentPosition = currentDuration;
-		mp.seekTo(currentPosition);
+		mService.seekToCurrentPos(seekBar.getProgress());
 		updateProgressBar();
 	}
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.playButton: {
-			if (lastSelectedIndex == -1) {
-				playSong(0);
-			} else if (mp == null) {
-				playSong(lastSelectedIndex);
-			} else if (mp.isPlaying()) {
-				mp.pause();
-				playButton.setText("Play");
-			} else {
-				mp.start();
-				playButton.setText("Pause");
-			}
-			break;
-		}
-		case R.id.nextButton: {
-			playSong(lastSelectedIndex + 1);
-			break;
-		}
-		case R.id.prevButton: {
-			playSong(lastSelectedIndex - 1);
-			break;
-		}
-		case R.id.stopButton: {
-			mp.stop();
-			mp = null;
-			mHandler.removeCallbacks(mUpdateTimeTask);
-			songProgressBar.setProgress(0);
-			playButton.setText("Play");
-			break;
-		}
-
-		}
-	}
- 
-	
-	@Override
-	public void onCompletion(MediaPlayer mp) {
-		lastSelectedIndex +=1; 
-		if (lastSelectedIndex >= songsList.size()) {
-			lastSelectedIndex = 0;
-		}
-		playSong(lastSelectedIndex);
-	}
 }

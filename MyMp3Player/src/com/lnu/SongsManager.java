@@ -3,27 +3,34 @@ package com.lnu;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.os.Environment;
 
 public class SongsManager {
-	private final File MUSIC_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-	private final List<File> songsList = new ArrayList<File>();
+	private static final File MUSIC_DIR = Environment
+			.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
 
-	public List<File> getSongsList() {
+	private final static List<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
 
-		File[] files = MUSIC_DIR.listFiles(new Mp3FileFilter());
-		if(files.length ==0){
-			throw new RuntimeException("No Mp3 Songs found."); 
+	public static List<HashMap<String, String>> getSongsList() {
+		if (MUSIC_DIR == null || !MUSIC_DIR.exists()) {
+			throw new RuntimeException("SD card not found.");
 		}
-		for (File file : files) {
-			songsList.add(file);
+		File[] files = MUSIC_DIR.listFiles(new Mp3FileFilter());
+		if (files.length == 0) {
+			throw new RuntimeException("No Mp3 Songs found.");
+		}
+		for (File song : files) {
+			HashMap<String, String> item = new HashMap<String, String>();
+			item.put("name", song.getName());
+			item.put("songPath", song.getPath());
 		}
 		return songsList;
 	}
 
-	private class Mp3FileFilter implements FilenameFilter {
+	private static class Mp3FileFilter implements FilenameFilter {
 
 		@Override
 		public boolean accept(File dir, String filename) {

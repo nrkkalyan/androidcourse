@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<TextView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="Explicit Intent"
+		android:gravity="center" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="20sp" 
+		android:height="40sp" />
+		
+	<Button android:id="@+id/button" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="Start Hello"
+		android:layout_gravity="center" />
+		
+	<TextView android:id="@+id/name_display" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="Explicit Intent with Result"
+		android:gravity="center" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="20sp" 
+		android:height="40sp" />
+		
+	<Button android:id="@+id/name_button" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="Start Read Name"
+		android:layout_gravity="center" />
+		
+	<TextView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="External Implicit Intent"
+		android:gravity="center" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="20sp" 
+		android:height="40sp" />
+		
+	<Button android:id="@+id/browser_button" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="Start View Browser"
+		android:layout_gravity="center" />
+		
+	<TextView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="My Internal Implicit Intent"
+		android:gravity="center" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="20sp" 
+		android:height="40sp" />
+		
+	<Button android:id="@+id/my_implicit_button" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="Start Internal Implicit Intent"
+		android:layout_gravity="center" />
+		
+	<TextView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="My External Implicit Intent"
+		android:gravity="center" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="20sp" 
+		android:height="40sp" />
+		
+	<Button android:id="@+id/external_implicit_button" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="Start External Implicit Intent"
+		android:layout_gravity="center" />
+</LinearLayout>

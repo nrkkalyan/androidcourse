@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<TextView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="Raise Toasts in the Backgroud"
+		android:gravity="center" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="20sp" 
+		android:height="60sp" />
+	<LinearLayout 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:layout_gravity="center_horizontal" 
+		android:padding="5sp"
+		android:orientation="horizontal">
+		<Button 
+			android:layout_width="wrap_content" 
+			android:text="Start Toasting" 
+			android:layout_gravity="center" 
+			android:id="@+id/start_toast" 
+			android:layout_height="wrap_content"></Button>
+		<Button 
+			android:layout_width="wrap_content" 
+			android:text="Stop Toasting" 
+			android:layout_gravity="center" 
+			android:id="@+id/stop_toast" 
+			android:layout_height="wrap_content"></Button>
+	</LinearLayout>
+	
+
+		
+	<TextView 
+		android:id="@+id/count_display"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:text="Counting Display"
+		android:gravity="center" 
+		android:textColor="#ffffff80"
+		android:background="#ff000099" 
+		android:textSize="20sp" 
+		android:height="60sp" />
+		
+	<LinearLayout 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:layout_gravity="center_horizontal" 
+		android:padding="5sp"
+		android:orientation="horizontal">
+		<Button 
+			android:layout_width="wrap_content" 
+			android:text="Start Counting" 
+			android:layout_gravity="center" 
+			android:id="@+id/start_count" 
+			android:layout_height="wrap_content"></Button>
+		<Button 
+			android:layout_width="wrap_content" 
+			android:text="Stop Counting" 
+			android:layout_gravity="center" 
+			android:id="@+id/stop_count" 
+			android:layout_height="wrap_content"></Button>
+	</LinearLayout>
+	
+	
+	<ProgressBar
+		android:id="@+id/progress_bar" 
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         style="@android:style/Widget.ProgressBar.Horizontal"
+         android:layout_margin="20dp" />
+		
+	<LinearLayout 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:layout_gravity="center_horizontal" 
+		android:padding="5sp"
+		android:orientation="horizontal">
+		<Button 
+			android:layout_width="wrap_content" 
+			android:text="Start Progress" 
+			android:layout_gravity="center" 
+			android:id="@+id/start_progress" 
+			android:layout_height="wrap_content"></Button>
+		<Button 
+			android:layout_width="wrap_content" 
+			android:text="Stop Progress" 
+			android:layout_gravity="center" 
+			android:id="@+id/stop_progress" 
+			android:layout_height="wrap_content"></Button>
+	</LinearLayout>
+		
+
+</LinearLayout>

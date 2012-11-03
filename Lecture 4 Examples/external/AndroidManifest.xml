@@ -1,0 +1,32 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dv106.external"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk         
+        android:minSdkVersion="16"
+        android:targetSdkVersion="16" />
+
+    <application
+        android:icon="@drawable/lnu_symbol"
+        android:label="Lecture 4"
+        android:theme="@android:style/Theme.Holo.Light" >
+        
+        <activity android:name="dv106.external.ShowDate"
+                  android:label="@string/app_name">         
+			<intent-filter>
+                <action android:name="dv106.external.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <receiver android:name="dv106.external.ExternalMessageReceiver" 
+            	  android:label="@string/app_name" >
+			<intent-filter>
+                <action android:name="dv106.lecture4.BROADCAST" />
+            </intent-filter>
+        </receiver>
+  
+    </application>
+
+</manifest>

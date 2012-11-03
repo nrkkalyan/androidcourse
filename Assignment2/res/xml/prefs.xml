@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:key="pref_restrict_year"
+        android:summary="@string/restrict_year_summary"
+        android:title="@string/restrict_year" />
+
+    <ListPreference
+        android:dialogTitle="@string/bg_color"
+        android:entries="@array/bg_color"
+        android:entryValues="@array/bg_color"
+        android:key="pref_bg_color"
+        android:title="@string/bg_color" />
+
+    <EditTextPreference
+        android:defaultValue="0"
+        android:dialogTitle="@string/rotation_angle"
+        android:key="pref_rotation"
+        android:inputType="numberSigned"
+        android:summary="@string/rotation_angle_summary"
+        android:title="@string/rotation_angle" />
+
+</PreferenceScreen>
