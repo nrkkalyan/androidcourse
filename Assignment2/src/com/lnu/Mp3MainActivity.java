@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.lnu.R;
 import com.lnu.musicplayer.MusicService;
 
 /**
@@ -53,7 +52,7 @@ public class Mp3MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.activity_mp3_player);
 
 		mPlayButton = (Button) findViewById(R.id.playbutton);
 		mPauseButton = (Button) findViewById(R.id.pausebutton);
